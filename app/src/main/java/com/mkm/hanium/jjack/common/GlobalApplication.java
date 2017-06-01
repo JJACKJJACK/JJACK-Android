@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mkm.hanium.jjack;
+package com.mkm.hanium.jjack.common;
 
-import android.app.Activity;
 import android.app.Application;
 
 import com.kakao.auth.KakaoSDK;
+import com.mkm.hanium.jjack.kakao.KakaoSDKAdapter;
 
 /**
  * 이미지를 캐시를 앱 수준에서 관리하기 위한 애플리케이션 객체이다.
@@ -28,7 +28,7 @@ import com.kakao.auth.KakaoSDK;
  */
 public class GlobalApplication extends Application {
     private static volatile GlobalApplication instance = null;
-    private static volatile Activity currentActivity = null;
+    private static volatile long currentUserId = -5000;
 
     /**
      * singleton 애플리케이션 객체를 얻는다.
@@ -48,17 +48,16 @@ public class GlobalApplication extends Application {
         // PushService.init(); // 푸쉬기능 추가할 때
     }
 
-    public static Activity getCurrentActivity() {
-        return currentActivity;
-    }
-
     /**
-     * Activity가 올라올때마다 Activity의 onCreate에서 호출해줘야한다.
-     * @param currentActivity
+     * 로그인 시 유저의 고유 id를 받는다.
+     * 비로그인 상태를 판별하려면 기본값인 -5000으로 남아있는지 검사한다.
+     * @param id : 유저의 카카오 고유 id
      */
-    public static void setCurrentActivity(Activity currentActivity) {
-        GlobalApplication.currentActivity = currentActivity;
+    public static void setCurrentUserId(long id) {
+        GlobalApplication.currentUserId = id;
     }
+    public static long getCurrentUserId() { return currentUserId; }
+
 
     /**
      * 앱 종료시 싱글턴 객체 초기화

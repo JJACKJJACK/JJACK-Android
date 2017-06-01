@@ -1,25 +1,34 @@
 package com.mkm.hanium.jjack;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity
+import com.kakao.network.ErrorResult;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.kakao.usermgmt.callback.UnLinkResponseCallback;
+import com.kakao.util.helper.log.Logger;
+import com.mkm.hanium.jjack.common.BaseActivity;
+import com.mkm.hanium.jjack.login.LoginActivity;
+import com.mkm.hanium.jjack.util.BackPressCloseSystem;
+
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private TextView tv; // 로그인 테스트
-    //
+    private Button unlink;
+    private Button logout;
+
+    private final BackPressCloseSystem back = new BackPressCloseSystem(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,17 +36,46 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent intent = getIntent();
-        String text = intent.getStringExtra("member");
-        tv = (TextView) findViewById(R.id.tv_login);
-        tv.setText(text);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        unlink = (Button) findViewById(R.id.unlink);
+        unlink.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                UserManagement.requestUnlink(new UnLinkResponseCallback() {
+                    @Override
+                    public void onFailure(ErrorResult errorResult) {
+                        Logger.e(errorResult.toString());
+                    }
+
+                    @Override
+                    public void onSessionClosed(ErrorResult errorResult) {
+                        activityChange(LoginActivity.class);
+                    }
+
+                    @Override
+                    public void onNotSignedUp() {
+                        activityChange(LoginActivity.class);
+                    }
+
+                    @Override
+                    public void onSuccess(Long result) {
+                        Log.i("main", "unlink, " + result.toString());
+                        activityChange(LoginActivity.class);
+                    }
+                });
+            }
+        });
+
+        logout = (Button) findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserManagement.requestLogout(new LogoutResponseCallback() {
+                    @Override
+                    public void onCompleteLogout() {
+                        Log.i("main", "logout");
+                        activityChange(LoginActivity.class);
+                    }
+                });
             }
         });
 
@@ -46,6 +84,7 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -57,7 +96,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            back.onBackPressed();
         }
     }
 
@@ -89,17 +128,9 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_logout) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_leave) {
 
         }
 

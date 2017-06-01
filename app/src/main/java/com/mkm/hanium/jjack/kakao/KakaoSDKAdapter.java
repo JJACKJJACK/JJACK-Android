@@ -1,4 +1,4 @@
-package com.mkm.hanium.jjack;
+package com.mkm.hanium.jjack.kakao;
 
 import android.content.Context;
 
@@ -7,8 +7,22 @@ import com.kakao.auth.AuthType;
 import com.kakao.auth.IApplicationConfig;
 import com.kakao.auth.ISessionConfig;
 import com.kakao.auth.KakaoAdapter;
+import com.mkm.hanium.jjack.common.GlobalApplication;
 
 public class KakaoSDKAdapter extends KakaoAdapter {
+
+    /**
+     * Application이 가지고있는 정보를 얻기위한 interface.
+     */
+    @Override
+    public IApplicationConfig getApplicationConfig() {
+        return new IApplicationConfig() {
+            @Override
+            public Context getApplicationContext() {
+                return GlobalApplication.getGlobalApplicationContext();
+            }
+        };
+    }
 
     /**
      * 로그인을 위해 Session을 생성하기 위해 필요한 옵션을 얻기위한 abstract class.
@@ -17,11 +31,11 @@ public class KakaoSDKAdapter extends KakaoAdapter {
     @Override
     public ISessionConfig getSessionConfig() {
         return new ISessionConfig() {
+
             @Override
             public AuthType[] getAuthTypes() {
                 return new AuthType[] {AuthType.KAKAO_LOGIN_ALL};
             }
-
             /**
              * 로그인시 인증받을 타입을 지정한다. 지정하지 않을 시 가능한 모든 옵션이 지정된다.
              * 1.KAKAO_TALK :  kakaotalk으로 login을 하고 싶을때 지정.
@@ -33,12 +47,10 @@ public class KakaoSDKAdapter extends KakaoAdapter {
              */
 
             @Override
-            public boolean isUsingWebviewTimer() {
-                return false;
-            }
+            public boolean isUsingWebviewTimer() { return false; }
             /**
              * SDK 로그인시 사용되는 WebView에서 pause와 resume시에 Timer를 설정하여 CPU소모를 절약한다.
-             * true를 리턴할경우 webview 로그인을 사용하는 화면에서 모든 webview에
+             * true를 리턴할경우 webview 로그인을 사용하는 화면에서 모든 webview
              * onPause와 onResume시에 Timer를 설정해 주어야 한다. 지정하지 않을 시 false로 설정된다.
             */
 
@@ -55,7 +67,6 @@ public class KakaoSDKAdapter extends KakaoAdapter {
             public boolean isSaveFormData() {
                 return true;
             }
-
             /**
              * Kakao SDK 에서 사용되는 WebView에서 email 입력폼에서 data를 save할지여부를 결정한다. Default true.
              */
@@ -67,19 +78,6 @@ public class KakaoSDKAdapter extends KakaoAdapter {
             /**
              * 로그인시 access token과 refresh token을 저장할 때의 암호화 여부를 결정한다.
              */
-        };
-    }
-
-    /**
-     * Application이 가지고있는 정보를 얻기위한 interface.
-     */
-    @Override
-    public IApplicationConfig getApplicationConfig() {
-        return new IApplicationConfig() {
-            @Override
-            public Context getApplicationContext() {
-                return GlobalApplication.getGlobalApplicationContext();
-            }
         };
     }
 }
