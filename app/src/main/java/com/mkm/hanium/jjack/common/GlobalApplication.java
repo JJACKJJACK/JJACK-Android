@@ -54,9 +54,9 @@ public class GlobalApplication extends Application {
      * @param id : 유저의 카카오 고유 id
      */
     public static void setCurrentUserId(long id) {
-        GlobalApplication.currentUserId = id;
+        instance.currentUserId = id;
     }
-    public static long getCurrentUserId() { return currentUserId; }
+    public static long getCurrentUserId() { return instance.currentUserId; }
 
 
     /**

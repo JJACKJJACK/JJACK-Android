@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.kakao.auth.ApiResponseCallback;
@@ -14,13 +13,18 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.helper.log.Logger;
+import com.mkm.hanium.jjack.ApiClient;
+import com.mkm.hanium.jjack.ApiInterface;
 import com.mkm.hanium.jjack.MainActivity;
 import com.mkm.hanium.jjack.R;
 import com.mkm.hanium.jjack.common.BaseActivity;
 import com.mkm.hanium.jjack.common.GlobalApplication;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by MIN on 2017-05-20.
@@ -28,6 +32,7 @@ import java.util.Map;
 
 public class SignupActivity extends BaseActivity {
 
+    private Button signup;
     /**
      * requestMe를 호출한다.
      * @param savedInstanceState 기존 session 정보가 저장된 객체
@@ -62,8 +67,7 @@ public class SignupActivity extends BaseActivity {
             }
 
             @Override
-            public void onSessionClosed(ErrorResult errorResult) {
-            }
+            public void onSessionClosed(ErrorResult errorResult) {}
 
             /**
              * 앱에 가입되어 있지 않은 사람을 대상으로 가입창이 출력된다.
@@ -80,7 +84,7 @@ public class SignupActivity extends BaseActivity {
              */
             @Override
             public void onSuccess(UserProfile userProfile) {
-                Log.i("UserProfile", userProfile.toString());
+                Log.i("SignupActivity", "UserProfile : " + userProfile.toString());
                 GlobalApplication.setCurrentUserId(userProfile.getId());
                 activityChangeAndFinish(MainActivity.class);
             }
@@ -88,48 +92,69 @@ public class SignupActivity extends BaseActivity {
     }
 
     protected void showSignupPage() {
-        setContentView(R.layout.layout_signup_extra_user_property);
-        Button signup = (Button) findViewById(R.id.btn_signup);
-
-        final EditText gender = (EditText) findViewById(R.id.gender);
-        final EditText age = (EditText) findViewById(R.id.age);
+        setContentView(R.layout.layout_signup);
+        signup = (Button) findViewById(R.id.btn_signup);
+        final ExtraUserPropertyLayout extraUserPropertyLayout = (ExtraUserPropertyLayout) findViewById(R.id.extra_user_property);
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, String> properties = new HashMap<>();
-                final String data1 = gender.getText().toString();
-                final String data2 = age.getText().toString();
-                properties.put("sex", data1);
-                properties.put("year", data2);
-
-                UserManagement.requestSignup(new ApiResponseCallback<Long>() {
-                    @Override
-                    public void onSessionClosed(ErrorResult errorResult) {
-                        activityRefresh(LoginActivity.class);
-                    }
-
-                    @Override
-                    public void onNotSignedUp() {}
-
-                    @Override
-                    public void onSuccess(Long result) {
-                        GlobalApplication.setCurrentUserId(result);
-                        Log.i("sign up", data1 + " " + data2);
-                        activityChangeAndFinish(MainActivity.class);
-                    }
-
-                    @Override
-                    public void onFailure(ErrorResult errorResult) {
-                        final String message = "UsermgmtResponseCallback : failure : " + errorResult;
-                        com.kakao.util.helper.log.Logger.w(message);
-                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                        activityRefresh(LoginActivity.class);
-                    }
-                }, properties);
+                requestSignup(extraUserPropertyLayout.getProperties());
             }
         });
+    }
 
+    protected void requestSignup(final Map<String, String> properties) {
+        UserManagement.requestSignup(new ApiResponseCallback<Long>() {
+            @Override
+            public void onSessionClosed(ErrorResult errorResult) {
+                activityRefresh(LoginActivity.class);
+            }
 
+            @Override
+            public void onNotSignedUp() {}
+
+            @Override
+            public void onSuccess(final Long result) {
+                final int year = Integer.parseInt(properties.get("year"));
+                final String gender = properties.get("gender");
+                GlobalApplication.setCurrentUserId(result);
+
+                ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+                Call<UserPropertyApi> call = apiInterface.sendUserProperty(result, gender, year);
+
+                call.enqueue(new Callback<UserPropertyApi>() {
+                    @Override
+                    public void onResponse(Call<UserPropertyApi> call, Response<UserPropertyApi> response) {
+                        if(response.body().getCode() == 1){
+                            Log.i("SignupActivity", "Sign up success : ID(" + result.toString()
+                                    + "), year(" + year + "), gender(" + gender + ")");
+
+                            activityChangeAndFinish(MainActivity.class);
+                        }
+                        else{
+                            Log.e("SignupActivity", response.body().getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserPropertyApi> call, Throwable t) {
+                        Log.e("SignupActivity", "Not Connected to server :\n" + t.getMessage() + call.request());
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                final String message = "SignupActivity, UsermgmtResponseCallback : failure : " + errorResult;
+                com.kakao.util.helper.log.Logger.w(message);
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                activityRefresh(LoginActivity.class);
+            }
+        }, properties);
+    }
+
+    public void setSignupBtnEnable(boolean state) {
+        signup.setEnabled(state);
     }
 }

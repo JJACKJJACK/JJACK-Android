@@ -20,7 +20,7 @@ allprojects {
         // 카카오 라이브러리
         maven { url 'http://devrepo.kakao.com:8088/nexus/content/groups/public/' }
 
-        // 차트 라이브러리
+        // MP android(차트 라이브러리)
         maven { url "https://jitpack.io" }
     }
 }

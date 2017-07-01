@@ -11,7 +11,8 @@
         android:gravity="center"
         android:layout_marginBottom="113dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true" >
 
         <Button
             android:id="@+id/btn_login_guest"
@@ -31,5 +32,6 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_weight="1" />
+
     </LinearLayout>
 </RelativeLayout>
