@@ -1,4 +1,4 @@
-package com.mkm.hanium.jjack.ranking;
+package com.mkm.hanium.jjack.keyword_ranking;
 
 /**
  * Created by MIN on 2017-06-24.

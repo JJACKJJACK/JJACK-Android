@@ -1,10 +1,10 @@
-package com.mkm.hanium.jjack.login;
+package com.mkm.hanium.jjack.util;
 
 /**
  * Created by MIN on 2017-06-06.
  */
 
-public class UserPropertyApi {
+public class DefaultApi {
     private int code;
     private String message;
 

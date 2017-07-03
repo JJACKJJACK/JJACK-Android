@@ -1,4 +1,4 @@
-package com.mkm.hanium.jjack.ranking;
+package com.mkm.hanium.jjack.keyword_ranking;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

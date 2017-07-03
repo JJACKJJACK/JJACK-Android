@@ -7,4 +7,5 @@
     <string name="action_settings">Settings</string>
 
     <string name="signup_button">가입하기</string>
+    <string name="popup_chart_title">최근 검색 추이</string>
 </resources>

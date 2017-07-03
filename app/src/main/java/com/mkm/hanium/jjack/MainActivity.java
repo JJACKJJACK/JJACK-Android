@@ -20,10 +20,10 @@ import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import com.kakao.util.helper.log.Logger;
 import com.mkm.hanium.jjack.common.BaseActivity;
 import com.mkm.hanium.jjack.common.GlobalApplication;
+import com.mkm.hanium.jjack.keyword_ranking.KeywordRankingFragment;
 import com.mkm.hanium.jjack.login.LoginActivity;
-import com.mkm.hanium.jjack.login.UserPropertyApi;
-import com.mkm.hanium.jjack.ranking.KeywordRankingFragment;
 import com.mkm.hanium.jjack.util.BackPressCloseSystem;
+import com.mkm.hanium.jjack.util.DefaultApi;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,7 +87,7 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_kakaolink) {
             return true;
         }
 
@@ -157,11 +157,10 @@ public class MainActivity extends BaseActivity
                         Log.d("MainActivity", "unlink to kakao is successful : , " + result.toString());
                         GlobalApplication.setCurrentUserId(defaultUserId);
 
-                        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-                        Call<UserPropertyApi> call = apiInterface.unlinkUserProperty(result);
-                        call.enqueue(new Callback<UserPropertyApi>() {
+                        Call<DefaultApi> call = GlobalApplication.getApiInterface().unlinkUserProperty(result);
+                        call.enqueue(new Callback<DefaultApi>() {
                             @Override
-                            public void onResponse(Call<UserPropertyApi> call, Response<UserPropertyApi> response) {
+                            public void onResponse(Call<DefaultApi> call, Response<DefaultApi> response) {
                                 if (response.body().getCode() == 1) {
                                     Log.d("MainActivity", "unlink to DB is successful");
                                 } else {
@@ -170,7 +169,7 @@ public class MainActivity extends BaseActivity
                             }
 
                             @Override
-                            public void onFailure(Call<UserPropertyApi> call, Throwable t) {
+                            public void onFailure(Call<DefaultApi> call, Throwable t) {
                                 Log.e("SignupActivity", "Not Connected to server :\n" + t.getMessage() + call.request());
                             }
                         });

@@ -1,4 +1,4 @@
-package com.mkm.hanium.jjack;
+package com.mkm.hanium.jjack.util;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

@@ -19,6 +19,8 @@ import android.app.Application;
 
 import com.kakao.auth.KakaoSDK;
 import com.mkm.hanium.jjack.kakao.KakaoSDKAdapter;
+import com.mkm.hanium.jjack.util.ApiClient;
+import com.mkm.hanium.jjack.util.ApiInterface;
 
 /**
  * 이미지를 캐시를 앱 수준에서 관리하기 위한 애플리케이션 객체이다.
@@ -29,7 +31,7 @@ import com.mkm.hanium.jjack.kakao.KakaoSDKAdapter;
 public class GlobalApplication extends Application {
     private static volatile GlobalApplication instance = null;
     private static volatile long currentUserId = -5000;
-
+    private static volatile ApiInterface apiInterface;
     /**
      * singleton 애플리케이션 객체를 얻는다.
      * @return singleton 애플리케이션 객체
@@ -44,6 +46,7 @@ public class GlobalApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
         KakaoSDK.init(new KakaoSDKAdapter());
         // PushService.init(); // 푸쉬기능 추가할 때
     }
@@ -58,6 +61,7 @@ public class GlobalApplication extends Application {
     }
     public static long getCurrentUserId() { return instance.currentUserId; }
 
+    public static ApiInterface getApiInterface() { return instance.apiInterface; }
 
     /**
      * 앱 종료시 싱글턴 객체 초기화

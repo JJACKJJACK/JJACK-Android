@@ -13,12 +13,11 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.helper.log.Logger;
-import com.mkm.hanium.jjack.ApiClient;
-import com.mkm.hanium.jjack.ApiInterface;
 import com.mkm.hanium.jjack.MainActivity;
 import com.mkm.hanium.jjack.R;
 import com.mkm.hanium.jjack.common.BaseActivity;
 import com.mkm.hanium.jjack.common.GlobalApplication;
+import com.mkm.hanium.jjack.util.DefaultApi;
 
 import java.util.Map;
 
@@ -120,12 +119,11 @@ public class SignupActivity extends BaseActivity {
                 final String gender = properties.get("gender");
                 GlobalApplication.setCurrentUserId(result);
 
-                ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-                Call<UserPropertyApi> call = apiInterface.sendUserProperty(result, gender, year);
+                Call<DefaultApi> call = GlobalApplication.getApiInterface().sendUserProperty(result, gender, year);
 
-                call.enqueue(new Callback<UserPropertyApi>() {
+                call.enqueue(new Callback<DefaultApi>() {
                     @Override
-                    public void onResponse(Call<UserPropertyApi> call, Response<UserPropertyApi> response) {
+                    public void onResponse(Call<DefaultApi> call, Response<DefaultApi> response) {
                         if(response.body().getCode() == 1){
                             Log.i("SignupActivity", "Sign up success : ID(" + result.toString()
                                     + "), year(" + year + "), gender(" + gender + ")");
@@ -138,7 +136,7 @@ public class SignupActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<UserPropertyApi> call, Throwable t) {
+                    public void onFailure(Call<DefaultApi> call, Throwable t) {
                         Log.e("SignupActivity", "Not Connected to server :\n" + t.getMessage() + call.request());
                     }
                 });
