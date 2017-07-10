@@ -23,6 +23,10 @@ public interface ApiInterface {
     Call<DefaultApi> unlinkUserProperty(@Field("id") long userId);
 
     @Headers({"Accept: application/json"})
+    @GET("keyword/select/ranking")
+    Call<KeywordRankingApi> loadKeywordRanking();
+
+    @Headers({"Accept: application/json"})
     @GET("db_article/send")
     Call<DefaultApi> sendKakaoLinkArticle(@Query("id") int articleId);
 }

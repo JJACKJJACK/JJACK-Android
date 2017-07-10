@@ -13,7 +13,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.FeedTemplate;
+import com.kakao.message.template.LinkObject;
+import com.kakao.message.template.SocialObject;
 import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
@@ -22,6 +30,7 @@ import com.mkm.hanium.jjack.common.BaseActivity;
 import com.mkm.hanium.jjack.common.GlobalApplication;
 import com.mkm.hanium.jjack.keyword_ranking.KeywordRankingFragment;
 import com.mkm.hanium.jjack.login.LoginActivity;
+import com.mkm.hanium.jjack.timeline.TimelineFragment;
 import com.mkm.hanium.jjack.util.BackPressCloseSystem;
 import com.mkm.hanium.jjack.util.DefaultApi;
 
@@ -33,8 +42,10 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final BackPressCloseSystem mBack = new BackPressCloseSystem(this);
-    private final String mTitle = "키워드 랭킹";
+    private final String TAG = "MainActivity";
+    private final String mTitle = "타임라인";
     private final String mKeywordRanking = "keyword_ranking";
+    private final String mTimeline = "time_line";
     private final long defaultUserId = -5000;
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
@@ -42,7 +53,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("MainActivity", "onCreate()");
+        Log.d(TAG, "onCreate()");
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setTitle(mTitle);
@@ -59,7 +70,7 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragmentComponentLayout, new KeywordRankingFragment(), mKeywordRanking).commit();
+                .add(R.id.fragmentComponentLayout, new TimelineFragment(), mTimeline).commit();
     }
 
     @Override
@@ -88,6 +99,7 @@ public class MainActivity extends BaseActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_kakaolink) {
+            sendDefaultFeedTemplate();
             return true;
         }
 
@@ -104,79 +116,28 @@ public class MainActivity extends BaseActivity
         Fragment fragment = null;
         String tag = null;
 
-        if (id == R.id.nav_keyword_ranking) {
-            Log.d("MainActivity", mKeywordRanking + " is selected.");
-            tag = mKeywordRanking;
-            fragment = new KeywordRankingFragment();
-        } else if (id == R.id.nav_logout) {
-            if(GlobalApplication.getCurrentUserId() == defaultUserId) {
-                Toast.makeText(this, "비로그인 사용자입니다.", Toast.LENGTH_LONG).show();
-            } else {
-                UserManagement.requestLogout(new LogoutResponseCallback() {
-                    @Override
-                    public void onCompleteLogout() {
-                        /**
-                         * 로그아웃
-                         * GlobalApplication에 저장된 유저 ID를 비회원값(-5000)으로 변경
-                         * 위 내용은 탈퇴에서도 마찬가지
-                         */
-                        Log.d("MainActivity", "logout success.");
-                        GlobalApplication.setCurrentUserId(defaultUserId);
-                        activityChangeAndFinish(LoginActivity.class);
-                    }
-                });
-            }
-        } else if (id == R.id.nav_unlink) {
-            if(GlobalApplication.getCurrentUserId() == defaultUserId) {
-                Toast.makeText(this, "비로그인 사용자입니다.", Toast.LENGTH_LONG).show();
-            } else {
-                UserManagement.requestUnlink(new UnLinkResponseCallback() {
-                    @Override
-                    public void onFailure(ErrorResult errorResult) {
-                        Log.e("MainActivity", "unlink : Fail");
-                        Logger.e(errorResult.toString());
-                    }
+        switch (id) {
+            case R.id.nav_keyword_ranking:
+                Log.d(TAG, mKeywordRanking + " is selected.");
+                tag = mKeywordRanking;
+                fragment = new KeywordRankingFragment();
+                mToolbar.setTitle("키워드 랭킹");
+                break;
+            case R.id.nav_timeline:
+                Log.d(TAG, mTimeline + " is selected.");
+                tag = mTimeline;
+                fragment = new TimelineFragment();
+                mToolbar.setTitle("타임라인");
+                break;
+            case R.id.nav_logout:
+                logout();
+                break;
+            case R.id.nav_unlink:
+                unlink();
+                break;
 
-                    @Override
-                    public void onSessionClosed(ErrorResult errorResult) {
-                        Log.d("MainActivity", "unlink : Session Closed.");
-                        activityChangeAndFinish(LoginActivity.class);
-                    }
-
-                    @Override
-                    public void onNotSignedUp() {
-                        /**
-                         * TODO : 비회원이 탈퇴버튼을 누르지 못하게 할 것.
-                         */
-                        Log.d("MainActivity", "unlink : Not Signed up.");
-                        activityChangeAndFinish(LoginActivity.class);
-                    }
-
-                    @Override
-                    public void onSuccess(Long result) {
-                        Log.d("MainActivity", "unlink to kakao is successful : , " + result.toString());
-                        GlobalApplication.setCurrentUserId(defaultUserId);
-
-                        Call<DefaultApi> call = GlobalApplication.getApiInterface().unlinkUserProperty(result);
-                        call.enqueue(new Callback<DefaultApi>() {
-                            @Override
-                            public void onResponse(Call<DefaultApi> call, Response<DefaultApi> response) {
-                                if (response.body().getCode() == 1) {
-                                    Log.d("MainActivity", "unlink to DB is successful");
-                                } else {
-                                    Log.e("MainActivity", response.body().getMessage());
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<DefaultApi> call, Throwable t) {
-                                Log.e("SignupActivity", "Not Connected to server :\n" + t.getMessage() + call.request());
-                            }
-                        });
-                        activityChangeAndFinish(LoginActivity.class);
-                    }
-                });
-            }
+            default:
+                break;
         }
 
         if(fragment != null && tag != null) {
@@ -188,5 +149,114 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logout() {
+        if(GlobalApplication.getCurrentUserId() == defaultUserId) {
+            Toast.makeText(this, "비로그인 사용자입니다.", Toast.LENGTH_LONG).show();
+        } else {
+            UserManagement.requestLogout(new LogoutResponseCallback() {
+                @Override
+                public void onCompleteLogout() {
+                    /**
+                     * GlobalApplication에 저장된 유저 ID를 비회원값(-5000)으로 변경하고
+                     * 로그인 액티비티로 돌아간다.
+                     */
+                    Log.d(TAG, "logout success.");
+                    GlobalApplication.setCurrentUserId(defaultUserId);
+                    activityChangeAndFinish(LoginActivity.class);
+                }
+            });
+        }
+    }
+
+    private void unlink() {
+        if(GlobalApplication.getCurrentUserId() == defaultUserId) {
+            Toast.makeText(this, "비로그인 사용자입니다.", Toast.LENGTH_LONG).show();
+        } else {
+            UserManagement.requestUnlink(new UnLinkResponseCallback() {
+                /**
+                 * 탈퇴처리
+                 * onSuccess()에서 정상실행됨.
+                 */
+                @Override
+                public void onFailure(ErrorResult errorResult) {
+                    Log.e(TAG, "unlink : Fail");
+                    Logger.e(errorResult.toString());
+                }
+
+                @Override
+                public void onSessionClosed(ErrorResult errorResult) {
+                    Log.d(TAG, "unlink : Session Closed.");
+                    activityChangeAndFinish(LoginActivity.class);
+                }
+
+                @Override
+                public void onNotSignedUp() {
+                    Log.d(TAG, "unlink : Not Signed up.");
+                    activityChangeAndFinish(LoginActivity.class);
+                }
+
+                @Override
+                public void onSuccess(Long result) {
+                    Log.d(TAG, "unlink to kakao is successful : , " + result.toString());
+                    GlobalApplication.setCurrentUserId(defaultUserId);
+
+                    Call<DefaultApi> call = GlobalApplication.getApiInterface().unlinkUserProperty(result);
+                    call.enqueue(new Callback<DefaultApi>() {
+                        /**
+                         * DB에 접근하여 등록된 회원 정보를 삭제한다.
+                         */
+                        @Override
+                        public void onResponse(Call<DefaultApi> call, Response<DefaultApi> response) {
+                            if (response.body().getCode() == 1) {
+                                Log.d(TAG, "unlink to DB is successful");
+                            } else {
+                                Log.e(TAG, response.body().getMessage());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<DefaultApi> call, Throwable t) {
+                            Log.e("SignupActivity", "Not Connected to server :\n" + t.getMessage() + call.request());
+                        }
+                    });
+                    activityChangeAndFinish(LoginActivity.class);
+                }
+            });
+        }
+    }
+
+    private void sendDefaultFeedTemplate() {
+        FeedTemplate params = FeedTemplate
+                .newBuilder(ContentObject.newBuilder("딸기 치즈 케익",
+                        "http://mud-kage.kakao.co.kr/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png",
+                        LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
+                                .setMobileWebUrl("https://developers.kakao.com").build())
+                        .setDescrption("#케익 #딸기 #삼평동 #카페 #분위기 #소개팅")
+                        .build())
+                .setSocial(SocialObject.newBuilder().setLikeCount(286).setCommentCount(45)
+                        .setSharedCount(845).build())
+                .addButton(new ButtonObject("웹으로 보기", LinkObject.newBuilder().setWebUrl("https://developers.kakao.com").setMobileWebUrl("https://developers.kakao.com").build()))
+                .addButton(new ButtonObject("앱으로 보기", LinkObject.newBuilder()
+                        .setWebUrl("https://developers.kakao.com")
+                        .setMobileWebUrl("https://developers.kakao.com")
+                        .setAndroidExecutionParams("key1=value1")
+                        .setIosExecutionParams("key1=value1")
+                        .build()))
+                .build();
+
+
+        KakaoLinkService.getInstance().sendDefault(this, params, new ResponseCallback<KakaoLinkResponse>() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                Logger.e(errorResult.toString());
+            }
+
+            @Override
+            public void onSuccess(KakaoLinkResponse result) {
+                Log.d(TAG, "Send KakaoLink");
+            }
+        });
     }
 }

@@ -30,7 +30,7 @@ import retrofit2.Response;
  */
 
 public class SignupActivity extends BaseActivity {
-
+    private final String TAG = "SignupActivity";
     private Button signup;
     /**
      * requestMe를 호출한다.
@@ -42,18 +42,18 @@ public class SignupActivity extends BaseActivity {
         requestMe();
     }
 
-    /**
-     * 로그인 시 수행할 메소드
-     */
     protected void requestMe() {
+        /**
+         * 로그인 시 수행하는 메소드
+         */
         UserManagement.requestMe(new MeResponseCallback() {
 
-            /**
-             * 로그인에 실패한 경우
-             * @param errorResult
-             */
             @Override
             public void onFailure(ErrorResult errorResult) {
+                /**
+                 * 로그인에 실패한 경우
+                 * @param errorResult
+                 */
                 String message = "failed to get user info. msg=" + errorResult;
                 Logger.d(message);
 
@@ -68,22 +68,22 @@ public class SignupActivity extends BaseActivity {
             @Override
             public void onSessionClosed(ErrorResult errorResult) {}
 
-            /**
-             * 앱에 가입되어 있지 않은 사람을 대상으로 가입창이 출력된다.
-             */
             @Override
             public void onNotSignedUp() {
+                /**
+                 * 비가입 상태이면 가입창을 띄운다.
+                 */
                 showSignupPage();
             }
 
-            /**
-             * 로그인에 성공하면 로그인한 사용자의 일련번호, 닉네임, 이미지url등을 리턴합니다.
-             * 사용자 ID는 보안상의 문제로 제공하지 않고 일련번호는 제공합니다.
-             * @param userProfile : 유저의 프로필 정보. 카카오 API
-             */
             @Override
             public void onSuccess(UserProfile userProfile) {
-                Log.i("SignupActivity", "UserProfile : " + userProfile.toString());
+                /**
+                 * 로그인에 성공하면 로그인한 사용자의 일련번호, 닉네임, 이미지url등을 리턴합니다.
+                 * 사용자 ID는 보안상의 문제로 제공하지 않고 일련번호는 제공합니다.
+                 * @param userProfile : 유저의 프로필 정보. 카카오 API
+                 */
+                Log.i(TAG, "UserProfile : " + userProfile.toString());
                 GlobalApplication.setCurrentUserId(userProfile.getId());
                 activityChangeAndFinish(MainActivity.class);
             }
@@ -107,6 +107,7 @@ public class SignupActivity extends BaseActivity {
         UserManagement.requestSignup(new ApiResponseCallback<Long>() {
             @Override
             public void onSessionClosed(ErrorResult errorResult) {
+                Log.d(TAG, "onSessionClosed()");
                 activityRefresh(LoginActivity.class);
             }
 
@@ -115,6 +116,7 @@ public class SignupActivity extends BaseActivity {
 
             @Override
             public void onSuccess(final Long result) {
+                Log.d(TAG, "onSuccess() : requestSignup");
                 final int year = Integer.parseInt(properties.get("year"));
                 final String gender = properties.get("gender");
                 GlobalApplication.setCurrentUserId(result);
@@ -124,20 +126,18 @@ public class SignupActivity extends BaseActivity {
                 call.enqueue(new Callback<DefaultApi>() {
                     @Override
                     public void onResponse(Call<DefaultApi> call, Response<DefaultApi> response) {
-                        if(response.body().getCode() == 1){
-                            Log.i("SignupActivity", "Sign up success : ID(" + result.toString()
+                        if(response.body().getCode() == 1) {
+                            Log.i(TAG, "Sign up success : ID(" + result.toString()
                                     + "), year(" + year + "), gender(" + gender + ")");
-
                             activityChangeAndFinish(MainActivity.class);
-                        }
-                        else{
-                            Log.e("SignupActivity", response.body().getMessage());
+                        } else{
+                            Log.e(TAG, response.body().getMessage());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<DefaultApi> call, Throwable t) {
-                        Log.e("SignupActivity", "Not Connected to server :\n" + t.getMessage() + call.request());
+                        Log.e(TAG, "Not Connected to server :\n" + t.getMessage() + call.request());
                     }
                 });
             }

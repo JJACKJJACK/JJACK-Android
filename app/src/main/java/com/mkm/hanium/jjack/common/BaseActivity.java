@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
  */
 
 public class BaseActivity extends AppCompatActivity {
-
     protected void activityRefresh(Class<?> cls) {
         final Intent i = new Intent(getApplicationContext(), cls);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

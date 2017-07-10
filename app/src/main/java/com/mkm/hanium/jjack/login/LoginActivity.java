@@ -2,6 +2,7 @@ package com.mkm.hanium.jjack.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -18,12 +19,14 @@ import com.mkm.hanium.jjack.common.BaseActivity;
  */
 
 public class LoginActivity extends BaseActivity {
+    private final String TAG = "LoginActivity";
     private SessionCallback callback;
     private Button mLoginGuestBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate()");
         setContentView(R.layout.activity_login);
 
         callback = new SessionCallback();
@@ -42,6 +45,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // 간편로그인시 호출 ,없으면 간편로그인시 로그인 성공화면으로 넘어가지 않음
+        Log.d(TAG, "onActivityResult()");
         if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
             return;
         }
@@ -52,18 +56,21 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy()");
         Session.getCurrentSession().removeCallback(callback);
     }
 
     private class SessionCallback implements ISessionCallback {
         @Override
         public void onSessionOpened() {
+            Log.d(TAG, "onSessionOpened()");
             activityChange(SignupActivity.class);
         }
 
         @Override
         public void onSessionOpenFailed(KakaoException exception) {
             if(exception != null) {
+                Log.e(TAG, "onSessionOpenFailed()");
                 Logger.e(exception);
             }
         }
