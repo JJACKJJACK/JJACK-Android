@@ -12,13 +12,14 @@ import com.mkm.hanium.jjack.R;
  */
 
 public class RankingViewHolder extends RecyclerView.ViewHolder {
-    protected LinearLayout mLinearLayout;
-    protected TextView mRank, mName;
+    protected LinearLayout linearLayout;
+    protected TextView ranking, name, count;
 
     public RankingViewHolder(View itemView) {
         super(itemView);
-        mLinearLayout = (LinearLayout) itemView.findViewById(R.id.layout_ranking_item);
-        mRank = (TextView) itemView.findViewById(R.id.tv_rank);
-        mName = (TextView) itemView.findViewById(R.id.tv_rank_item_name);
+        linearLayout = (LinearLayout) itemView.findViewById(R.id.layout_ranking_item);
+        ranking = (TextView) itemView.findViewById(R.id.tv_ranking);
+        name = (TextView) itemView.findViewById(R.id.tv_rank_item_name);
+        count = (TextView) itemView.findViewById(R.id.tv_rank_count);
     }
 }

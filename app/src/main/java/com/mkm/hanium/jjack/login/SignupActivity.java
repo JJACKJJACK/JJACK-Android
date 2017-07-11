@@ -1,9 +1,9 @@
 package com.mkm.hanium.jjack.login;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.kakao.auth.ApiResponseCallback;
@@ -17,6 +17,7 @@ import com.mkm.hanium.jjack.MainActivity;
 import com.mkm.hanium.jjack.R;
 import com.mkm.hanium.jjack.common.BaseActivity;
 import com.mkm.hanium.jjack.common.GlobalApplication;
+import com.mkm.hanium.jjack.databinding.LayoutSignupBinding;
 import com.mkm.hanium.jjack.util.DefaultApi;
 
 import java.util.Map;
@@ -30,10 +31,11 @@ import retrofit2.Response;
  */
 
 public class SignupActivity extends BaseActivity {
-    private final String TAG = "SignupActivity";
-    private Button signup;
+
+    private LayoutSignupBinding binding;
+
     /**
-     * requestMe를 호출한다.
+     * requestMe를 호출하여 로그인 작업을 수행한다.
      * @param savedInstanceState 기존 session 정보가 저장된 객체
      */
     @Override
@@ -43,17 +45,15 @@ public class SignupActivity extends BaseActivity {
     }
 
     protected void requestMe() {
-        /**
-         * 로그인 시 수행하는 메소드
-         */
+        // 로그인 시 수행하는 메소드
         UserManagement.requestMe(new MeResponseCallback() {
 
+            /**
+             * 로그인에 실패한 경우
+             * @param errorResult
+             */
             @Override
             public void onFailure(ErrorResult errorResult) {
-                /**
-                 * 로그인에 실패한 경우
-                 * @param errorResult
-                 */
                 String message = "failed to get user info. msg=" + errorResult;
                 Logger.d(message);
 
@@ -70,19 +70,17 @@ public class SignupActivity extends BaseActivity {
 
             @Override
             public void onNotSignedUp() {
-                /**
-                 * 비가입 상태이면 가입창을 띄운다.
-                 */
+                // 비가입 상태이면 가입창을 띄운다.
                 showSignupPage();
             }
 
+            /**
+             * 로그인에 성공하면 로그인한 사용자의 일련번호, 닉네임, 이미지url등을 리턴합니다.
+             * 사용자 ID는 보안상의 문제로 제공하지 않고 일련번호는 제공합니다.
+             * @param userProfile : 유저의 프로필 정보. 카카오 API
+             */
             @Override
             public void onSuccess(UserProfile userProfile) {
-                /**
-                 * 로그인에 성공하면 로그인한 사용자의 일련번호, 닉네임, 이미지url등을 리턴합니다.
-                 * 사용자 ID는 보안상의 문제로 제공하지 않고 일련번호는 제공합니다.
-                 * @param userProfile : 유저의 프로필 정보. 카카오 API
-                 */
                 Log.i(TAG, "UserProfile : " + userProfile.toString());
                 GlobalApplication.setCurrentUserId(userProfile.getId());
                 activityChangeAndFinish(MainActivity.class);
@@ -91,16 +89,12 @@ public class SignupActivity extends BaseActivity {
     }
 
     protected void showSignupPage() {
-        setContentView(R.layout.layout_signup);
-        signup = (Button) findViewById(R.id.btn_signup);
-        final ExtraUserPropertyLayout extraUserPropertyLayout = (ExtraUserPropertyLayout) findViewById(R.id.extra_user_property);
+        binding = DataBindingUtil.setContentView(this, R.layout.layout_signup);
+        binding.setActivity(this);
+    }
 
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestSignup(extraUserPropertyLayout.getProperties());
-            }
-        });
+    public void onClick(View v) {
+        requestSignup(binding.extraUserProperty.getProperties());
     }
 
     protected void requestSignup(final Map<String, String> properties) {
@@ -153,6 +147,6 @@ public class SignupActivity extends BaseActivity {
     }
 
     public void setSignupBtnEnable(boolean state) {
-        signup.setEnabled(state);
+        binding.btnSignup.setEnabled(state);
     }
 }

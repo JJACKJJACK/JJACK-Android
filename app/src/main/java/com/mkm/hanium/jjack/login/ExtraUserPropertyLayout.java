@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import com.mkm.hanium.jjack.R;
+import com.mkm.hanium.jjack.databinding.LayoutSignupExtraUserPropertyBinding;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,8 +23,10 @@ public class ExtraUserPropertyLayout extends FrameLayout
     implements AdapterView.OnItemSelectedListener {
 
     /**
-     * 추가 정보를 받기 위한 레이아웃을 설정하는 부분
+     * 회원가입 시 추가 정보를 받는 레이아웃을 설정한다.
      */
+
+    private LayoutSignupExtraUserPropertyBinding binding;
 
     // property key
     private static final String YEAR_KEY = "year";
@@ -52,10 +55,13 @@ public class ExtraUserPropertyLayout extends FrameLayout
     }
 
     private void initView(Context context) {
-        final View view = inflate(getContext(), R.layout.layout_signup_extra_user_property, this);
+        this.context = context;
+        final View view = inflate(this.context, R.layout.layout_signup_extra_user_property, this);
+
+        // todo 데이터바인딩으로 변환
+
         year = (Spinner) view.findViewById(R.id.spinner_year);
         gender = (Spinner) view.findViewById(R.id.spinner_gender);
-        this.context = context;
         flag = new boolean[2];
 
         setSpinnerYear();
@@ -70,9 +76,12 @@ public class ExtraUserPropertyLayout extends FrameLayout
         for(int i = 1960; i <= y; i++)
             list.add(Integer.toString(i));
 
-        ArrayAdapter adapter = new ArrayAdapter(getContext(),
+        ArrayAdapter adapter = new ArrayAdapter(context,
                 R.layout.simple_dropdown_item_1line,
                 list);
+//        binding.spinnerYear.setSelection(0);
+//        binding.spinnerYear.setAdapter(adapter);
+//        binding.spinnerYear.setOnItemSelectedListener(this);
         year.setSelection(0);
         year.setAdapter(adapter);
         year.setOnItemSelectedListener(this);
@@ -87,6 +96,10 @@ public class ExtraUserPropertyLayout extends FrameLayout
         ArrayAdapter adapter = new ArrayAdapter(getContext(),
                 R.layout.simple_dropdown_item_1line,
                 list);
+
+//        binding.spinnerGender.setSelection(0);
+//        binding.spinnerGender.setAdapter(adapter);
+//        binding.spinnerGender.setOnItemSelectedListener(this);
         gender.setSelection(0);
         gender.setAdapter(adapter);
         gender.setOnItemSelectedListener(this);
@@ -95,6 +108,8 @@ public class ExtraUserPropertyLayout extends FrameLayout
     public HashMap<String, String> getProperties(){
         final String yearValue = String.valueOf(year.getSelectedItem());
         final String genderValue = String.valueOf(gender.getSelectedItem());
+//        final String yearValue = String.valueOf(binding.spinnerYear.getSelectedItem());
+//        final String genderValue = String.valueOf(binding.spinnerGender.getSelectedItem());
 
         HashMap<String, String> properties = new HashMap<>();
 

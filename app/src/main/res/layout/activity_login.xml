@@ -1,37 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<layout xmlns:android="http://schemas.android.com/apk/res/android" >
+    <data>
+        <variable
+            name="activity"
+            type="com.mkm.hanium.jjack.login.LoginActivity" />
+    </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_marginBottom="113dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true" >
+        android:layout_height="match_parent" >
 
-        <Button
-            android:id="@+id/btn_login_guest"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:text="로그인 없이 시작하기"
-            android:textColor="#000000"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="113dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true" >
 
-        <com.kakao.usermgmt.LoginButton
-            android:id="@+id/btn_login_kakao"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1" />
+            <Button
+                android:id="@+id/btn_login_guest"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:text="로그인 없이 시작하기"
+                android:textColor="#000000"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:onClick="@{activity::onClick}"/>
 
-    </LinearLayout>
-</RelativeLayout>
+            <com.kakao.usermgmt.LoginButton
+                android:id="@+id/btn_login_kakao"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

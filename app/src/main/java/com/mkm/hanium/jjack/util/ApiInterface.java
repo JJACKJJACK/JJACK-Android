@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 public interface ApiInterface {
     @Headers({"Accept: application/json"})
     @FormUrlEncoded
-    @POST("db_member/insert")
+    @POST("member/insert")
     Call<DefaultApi> sendUserProperty(
             @Field("id") long userId,
             @Field("gender") String gender,
@@ -19,14 +19,14 @@ public interface ApiInterface {
 
     @Headers({"Accept: application/json"})
     @FormUrlEncoded
-    @POST("db_member/delete")
+    @POST("member/delete")
     Call<DefaultApi> unlinkUserProperty(@Field("id") long userId);
 
     @Headers({"Accept: application/json"})
-    @GET("keyword/select/ranking")
-    Call<KeywordRankingApi> loadKeywordRanking();
+    @GET("keyword/get/ranking")
+    Call<KeywordRankingRequestApi> keywordRankingRequest();
 
     @Headers({"Accept: application/json"})
-    @GET("db_article/send")
-    Call<DefaultApi> sendKakaoLinkArticle(@Query("id") int articleId);
+    @GET("article")
+    Call<DefaultApi> acticleRequest(@Query("id") int articleId);
 }

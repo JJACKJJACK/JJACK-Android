@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -12,34 +11,34 @@ import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 import com.mkm.hanium.jjack.MainActivity;
 import com.mkm.hanium.jjack.R;
-import com.mkm.hanium.jjack.common.BaseActivity;
+import com.mkm.hanium.jjack.common.BindActivity;
+import com.mkm.hanium.jjack.databinding.ActivityLoginBinding;
 
 /**
  * Created by MIN on 2017-04-17.
  */
 
-public class LoginActivity extends BaseActivity {
-    private final String TAG = "LoginActivity";
+public class LoginActivity extends BindActivity<ActivityLoginBinding> {
     private SessionCallback callback;
-    private Button mLoginGuestBtn;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_login;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate()");
-        setContentView(R.layout.activity_login);
+
+        binding.setActivity(this);
 
         callback = new SessionCallback();
         Session.getCurrentSession().addCallback(callback);
         Session.getCurrentSession().checkAndImplicitOpen();
+    }
 
-        mLoginGuestBtn = (Button) findViewById(R.id.btn_login_guest);
-        mLoginGuestBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activityChangeAndFinish(MainActivity.class);
-            }
-        });
+    public void onClick(View v) {
+        activityChangeAndFinish(MainActivity.class);
     }
 
     @Override
@@ -56,7 +55,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy()");
         Session.getCurrentSession().removeCallback(callback);
     }
 

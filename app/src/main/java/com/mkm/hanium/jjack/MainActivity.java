@@ -1,13 +1,12 @@
 package com.mkm.hanium.jjack;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,8 +25,9 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import com.kakao.util.helper.log.Logger;
-import com.mkm.hanium.jjack.common.BaseActivity;
+import com.mkm.hanium.jjack.common.BindActivity;
 import com.mkm.hanium.jjack.common.GlobalApplication;
+import com.mkm.hanium.jjack.databinding.ActivityMainBinding;
 import com.mkm.hanium.jjack.keyword_ranking.KeywordRankingFragment;
 import com.mkm.hanium.jjack.login.LoginActivity;
 import com.mkm.hanium.jjack.timeline.TimelineFragment;
@@ -38,46 +38,59 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends BaseActivity
+public class MainActivity extends BindActivity<ActivityMainBinding>
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    // 데이터바인딩에 사용될 변수.
+    // 해당 레이아웃의 이름 + binding으로 자동 생성(activity_main -> ActivityMainBinding)
     private final BackPressCloseSystem mBack = new BackPressCloseSystem(this);
     private final String TAG = "MainActivity";
-    private final String mTitle = "타임라인";
-    private final String mKeywordRanking = "keyword_ranking";
-    private final String mTimeline = "time_line";
+    private final String title = "키워드 랭킹";
+    private final String keywordRankingTag = KeywordRankingFragment.class.getSimpleName();
+    private final String timelineTag = TimelineFragment.class.getSimpleName();
     private final long defaultUserId = -5000;
-    private Toolbar mToolbar;
-    private DrawerLayout mDrawer;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate()");
-        setContentView(R.layout.activity_main);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(mTitle);
-        setSupportActionBar(mToolbar);
 
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // 기존의 setContentView를 대체하며
+        // layout의 모든 view들이 findViewById를 쓰지 않아도 알아서 연결된다.
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        // include된 layout을 사용하기 위해서는 id를 반드시 지정해야 한다.
+        // binding.include필드의id.xxx 식으로 사용한다.
+        binding.includedAppBar.toolbar.setTitle(title);
+        setSupportActionBar(binding.includedAppBar.toolbar);
+
+        // layout 내 변수의 이름은 낙타표기법으로 자동 변환된다. nav_view -> navView
+        binding.navView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.addDrawerListener(toggle);
+                this,
+                binding.drawerLayout,
+                binding.includedAppBar.toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+
+        binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragmentComponentLayout, new TimelineFragment(), mTimeline).commit();
+        // 만약 ID값(int)이 필요하다면 ViewID.getId()를 이용한다.
+        getSupportFragmentManager().beginTransaction().add(
+                binding.includedAppBar.includedContents.fragmentComponentLayout.getId(),
+                        new KeywordRankingFragment(), keywordRankingTag).commit();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             mBack.onBackPressed();
         }
@@ -118,16 +131,16 @@ public class MainActivity extends BaseActivity
 
         switch (id) {
             case R.id.nav_keyword_ranking:
-                Log.d(TAG, mKeywordRanking + " is selected.");
-                tag = mKeywordRanking;
+                Log.d(TAG, keywordRankingTag + " is selected.");
+                tag = keywordRankingTag;
                 fragment = new KeywordRankingFragment();
-                mToolbar.setTitle("키워드 랭킹");
+                binding.includedAppBar.toolbar.setTitle(getString(R.string.title_keyword_ranking));
                 break;
             case R.id.nav_timeline:
-                Log.d(TAG, mTimeline + " is selected.");
-                tag = mTimeline;
+                Log.d(TAG, timelineTag + " is selected.");
+                tag = timelineTag;
                 fragment = new TimelineFragment();
-                mToolbar.setTitle("타임라인");
+                binding.includedAppBar.toolbar.setTitle(getString(R.string.title_timeline));
                 break;
             case R.id.nav_logout:
                 logout();
@@ -146,8 +159,7 @@ public class MainActivity extends BaseActivity
             fragmentManager.beginTransaction().replace(R.id.fragmentComponentLayout, fragment, tag).commit();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 

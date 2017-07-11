@@ -7,7 +7,7 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/tv_rank"
+        android:id="@+id/tv_ranking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="rank"
@@ -28,4 +28,16 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:id="@+id/tv_rank_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="item"
+        android:textSize="15sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
+
 </LinearLayout>
