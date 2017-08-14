@@ -1,43 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_ranking_item"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="adapter"
+            type="com.mkm.hanium.jjack.keyword_ranking.KeywordRankingAdapter" />
 
-    <TextView
-        android:id="@+id/tv_ranking"
-        android:layout_width="wrap_content"
+        <variable
+            name="item"
+            type="com.mkm.hanium.jjack.keyword_ranking.KeywordRankingItem" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/layout_ranking_item"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="rank"
-        android:textSize="20sp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"/>
+        android:orientation="horizontal"
+        android:onClick="@{adapter::onClick}">
 
-    <TextView
-        android:id="@+id/tv_rank_item_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="item"
-        android:textSize="25sp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp" />
+        <TextView
+            android:id="@+id/tv_ranking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{Integer.toString(item.ranking)}"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/tv_rank_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="item"
-        android:textSize="15sp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp" />
+        <TextView
+            android:id="@+id/tv_keyword_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.keywordName}"
+            android:textSize="25sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tv_rank_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{Integer.toString(item.count)}"
+            android:textSize="15sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
+
+    </LinearLayout>
+</layout>

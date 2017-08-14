@@ -11,6 +11,8 @@ public class ApiClient {
     public static final String Base_URL = "http://211.253.8.172/";
     private static Retrofit retrofit = null;
 
+    private ApiClient() {}
+
     public static Retrofit getClient() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()

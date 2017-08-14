@@ -1,16 +1,14 @@
 package com.mkm.hanium.jjack.timeline;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.baoyachi.stepview.VerticalStepView;
 import com.mkm.hanium.jjack.R;
+import com.mkm.hanium.jjack.common.BindFragment;
+import com.mkm.hanium.jjack.databinding.FragmentTimelineBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,48 +17,46 @@ import java.util.List;
  * Created by MIN on 2017-07-04.
  */
 
-public class TimelineFragment extends Fragment {
+public class TimelineFragment extends BindFragment<FragmentTimelineBinding> {
 
-    private VerticalStepView timeline;
-    private List<String> list;
-    private Context context;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d("TimelineFragment", "onCreate()");
+    public static TimelineFragment newInstance() {
+        return new TimelineFragment();
     }
 
+    private List<TimelineItem> list;
+    private TimelineAdapter adapter;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_timeline;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("TimelineFragment", "onCreateView()");
-        View layout = inflater.inflate(R.layout.fragment_timeline, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
 
-        timeline = (VerticalStepView) layout.findViewById(R.id.step_view_timeline);
-        list = new ArrayList<>();
-        context = getActivity();
-        
+        binding.setFragment(this);
         inputData();
+        setRecyclerView();
 
-        timeline.setStepsViewIndicatorComplectingPosition(list.size() - 2)//设置完成的步数
-                .reverseDraw(false) // default is true
-                .setStepViewTexts(list) // 总步骤
-                .setLinePaddingProportion(0.85f) // 设置indicator线与线间距的比例系数
-                .setStepsViewIndicatorCompletedLineColor(ContextCompat.getColor(context, android.R.color.white)) // 设置StepsViewIndicator完成线的颜色
-                .setStepsViewIndicatorUnCompletedLineColor(ContextCompat.getColor(context, R.color.uncompleted_text_color)) // 设置StepsViewIndicator未完成线的颜色
-                .setStepViewComplectedTextColor(ContextCompat.getColor(context, android.R.color.white)) // 设置StepsView text完成线的颜色
-                .setStepViewUnComplectedTextColor(ContextCompat.getColor(context, R.color.uncompleted_text_color)) // 设置StepsView text未完成线的颜色
-                .setStepsViewIndicatorCompleteIcon(ContextCompat.getDrawable(context, R.drawable.complted)) // 设置StepsViewIndicator CompleteIcon
-                .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(context, R.drawable.default_icon)) // 设置StepsViewIndicator DefaultIcon
-                .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(context, R.drawable.attention)); // 设置StepsViewIndicator AttentionIcon
-
-        return layout;
+        return binding.getRoot();
     }
 
     private void inputData() {
-        list.add("Test data 1");
-        list.add("Test data 2");
-        list.add("Test data 3");
-        list.add("Test data 4");
-        list.add("Test data 5");
+        list = new ArrayList<>();
+
+        list.add(new TimelineHeaderItem(TimelineAdapter.TYPE_HEADER, "Timeline Header Item"));
+        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/12", "Timeline Content Item 1"));
+        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/15", "Timeline Content Item 2"));
+        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/18", "Timeline Content Item 3"));
+        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/20", "Timeline Content Item 4"));
+        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/23", "Timeline Content Item 5"));
+        list.add(new TimelineHeaderItem(TimelineAdapter.TYPE_FOOTER, "Timeline Footer Item"));
+    }
+
+    private void setRecyclerView() {
+        adapter = new TimelineAdapter(getActivity(), list);
+        binding.recyclerViewTimeline.setAdapter(adapter);
+        binding.recyclerViewTimeline.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 }

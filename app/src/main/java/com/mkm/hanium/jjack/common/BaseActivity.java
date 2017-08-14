@@ -13,13 +13,18 @@ import android.util.Log;
 public class BaseActivity extends AppCompatActivity {
 
     // 현재 클래스의 이름을 저장할 변수
-    protected String TAG;
+    protected final String TAG = "LOG/" + getClass().getSimpleName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TAG = this.getClass().getSimpleName();
         Log.d(TAG, "onCreate()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume()");
     }
 
     @Override

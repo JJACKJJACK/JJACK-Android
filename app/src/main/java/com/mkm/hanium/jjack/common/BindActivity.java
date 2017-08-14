@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
  */
 
 public abstract class BindActivity<BindingType extends ViewDataBinding> extends BaseActivity {
+
     protected BindingType binding;
     protected abstract int getLayoutId();
 

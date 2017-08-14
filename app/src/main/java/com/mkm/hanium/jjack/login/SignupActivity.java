@@ -4,6 +4,9 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.kakao.auth.ApiResponseCallback;
@@ -20,6 +23,9 @@ import com.mkm.hanium.jjack.common.GlobalApplication;
 import com.mkm.hanium.jjack.databinding.LayoutSignupBinding;
 import com.mkm.hanium.jjack.util.DefaultApi;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -30,9 +36,11 @@ import retrofit2.Response;
  * Created by MIN on 2017-05-20.
  */
 
-public class SignupActivity extends BaseActivity {
+public class SignupActivity extends BaseActivity
+        implements AdapterView.OnItemSelectedListener{
 
     private LayoutSignupBinding binding;
+    boolean enableButton[];
 
     /**
      * requestMe를 호출하여 로그인 작업을 수행한다.
@@ -91,10 +99,52 @@ public class SignupActivity extends BaseActivity {
     protected void showSignupPage() {
         binding = DataBindingUtil.setContentView(this, R.layout.layout_signup);
         binding.setActivity(this);
+        binding.extraUserProperty.setActivity(this);
+        enableButton = new boolean[2];
+
+        setSpinner(binding.extraUserProperty.spinnerYear);
+        setSpinner(binding.extraUserProperty.spinnerGender);
     }
 
-    public void onClick(View v) {
-        requestSignup(binding.extraUserProperty.getProperties());
+    private void setSpinner(Spinner spinner) {
+        ArrayList<String> list = new ArrayList<>();
+
+        setSpinnerItem(list, spinner);
+
+        ArrayAdapter adapter = new ArrayAdapter(this,
+                R.layout.simple_dropdown_item_1line,
+                list);
+        spinner.setSelection(0);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+    }
+
+    private void setSpinnerItem(ArrayList<String> list, Spinner spinner) {
+        if(spinner == binding.extraUserProperty.spinnerYear) {
+            int y = Calendar.getInstance().get(Calendar.YEAR); // 현재 연도를 받아옴
+
+            list.add("태어난 해");
+
+            for (int i = 1960; i <= y; i++)
+                list.add(Integer.toString(i));
+
+        } else if (spinner == binding.extraUserProperty.spinnerGender) {
+            list.add("성별");
+            list.add("남자");
+            list.add("여자");
+        }
+    }
+
+    public void onButtonClick(View v) {
+        HashMap<String, String> properties = new HashMap<>();
+
+        String year = binding.extraUserProperty.spinnerYear.getSelectedItem().toString();
+        String gender = binding.extraUserProperty.spinnerGender.getSelectedItem().toString();
+
+        properties.put("year", year);
+        properties.put("gender", gender);
+
+        requestSignup(properties);
     }
 
     protected void requestSignup(final Map<String, String> properties) {
@@ -115,7 +165,7 @@ public class SignupActivity extends BaseActivity {
                 final String gender = properties.get("gender");
                 GlobalApplication.setCurrentUserId(result);
 
-                Call<DefaultApi> call = GlobalApplication.getApiInterface().sendUserProperty(result, gender, year);
+                Call<DefaultApi> call = GlobalApplication.getApiInterface().submitUserPropertyRequest(result, gender, year);
 
                 call.enqueue(new Callback<DefaultApi>() {
                     @Override
@@ -144,6 +194,30 @@ public class SignupActivity extends BaseActivity {
                 activityRefresh(LoginActivity.class);
             }
         }, properties);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(getApplicationContext(), "itemSelect", Toast.LENGTH_SHORT).show();
+        int selectedSpinner = -1;
+
+        if(parent.getId() == R.id.spinner_year)
+            selectedSpinner = 0;
+        else if(parent.getId() == R.id.spinner_gender)
+            selectedSpinner = 1;
+
+        if(position == 0 && selectedSpinner != -1) {
+            enableButton[selectedSpinner] = false;
+        } else {
+            enableButton[selectedSpinner] = true;
+        }
+
+        // 두 스피너 모두 정상적인 값이 선택되어야 버튼이 활성화됨
+        setSignupBtnEnable(enableButton[0] && enableButton[1]);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
     }
 
     public void setSignupBtnEnable(boolean state) {

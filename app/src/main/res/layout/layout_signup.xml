@@ -12,10 +12,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <com.mkm.hanium.jjack.login.ExtraUserPropertyLayout
+        <include
             android:id="@+id/extra_user_property"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            layout="@layout/layout_signup_extra_user_property" />
 
         <Button
             android:id="@+id/btn_signup"
@@ -33,6 +32,6 @@
             android:paddingRight="@dimen/com_kakao_padding"
             android:text="@string/signup_button"
             android:enabled="false"
-            android:onClick="@{activity::onClick}" />
+            android:onClick="@{activity::onButtonClick}" />
     </LinearLayout>
 </layout>

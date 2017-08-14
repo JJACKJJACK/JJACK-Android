@@ -12,18 +12,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.kakao.kakaolink.v2.KakaoLinkResponse;
-import com.kakao.kakaolink.v2.KakaoLinkService;
-import com.kakao.message.template.ButtonObject;
-import com.kakao.message.template.ContentObject;
-import com.kakao.message.template.FeedTemplate;
-import com.kakao.message.template.LinkObject;
-import com.kakao.message.template.SocialObject;
+import com.kakao.kakaolink.KakaoLink;
+import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.network.ErrorResult;
-import com.kakao.network.callback.ResponseCallback;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
+import com.kakao.util.KakaoParameterException;
 import com.kakao.util.helper.log.Logger;
 import com.mkm.hanium.jjack.common.BindActivity;
 import com.mkm.hanium.jjack.common.GlobalApplication;
@@ -44,8 +39,8 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
     // 데이터바인딩에 사용될 변수.
     // 해당 레이아웃의 이름 + binding으로 자동 생성(activity_main -> ActivityMainBinding)
     private final BackPressCloseSystem mBack = new BackPressCloseSystem(this);
-    private final String TAG = "MainActivity";
     private final String title = "키워드 랭킹";
+//    private final String title = getResources().getString(R.string.title_keyword_ranking);
     private final String keywordRankingTag = KeywordRankingFragment.class.getSimpleName();
     private final String timelineTag = TimelineFragment.class.getSimpleName();
     private final long defaultUserId = -5000;
@@ -63,12 +58,14 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
         // layout의 모든 view들이 findViewById를 쓰지 않아도 알아서 연결된다.
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        // include된 layout을 사용하기 위해서는 id를 반드시 지정해야 한다.
-        // binding.include필드의id.xxx 식으로 사용한다.
+        // xml include된 layout을 사용하기 위해서는 해당 부분의 id를 반드시 지정해야 한다.
+        // binding.(include필드의id).xxx 식으로 사용한다.
         binding.includedAppBar.toolbar.setTitle(title);
         setSupportActionBar(binding.includedAppBar.toolbar);
 
-        // layout 내 변수의 이름은 낙타표기법으로 자동 변환된다. nav_view -> navView
+        // <layout> 요소의 하위 뷰들의 id는 낙타표기법으로 자동 변환된다.
+        // nav_view -> binding.navView
+        // 변환된 인스턴스는 객체와 바로 연결된다. binding.navView는 NavigationView형 객체이다.
         binding.navView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -84,7 +81,7 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
         // 만약 ID값(int)이 필요하다면 ViewID.getId()를 이용한다.
         getSupportFragmentManager().beginTransaction().add(
                 binding.includedAppBar.includedContents.fragmentComponentLayout.getId(),
-                        new KeywordRankingFragment(), keywordRankingTag).commit();
+                        KeywordRankingFragment.newInstance(), keywordRankingTag).commit();
     }
 
     @Override
@@ -112,7 +109,7 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_kakaolink) {
-            sendDefaultFeedTemplate();
+            sendKakaoLink();
             return true;
         }
 
@@ -133,13 +130,13 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
             case R.id.nav_keyword_ranking:
                 Log.d(TAG, keywordRankingTag + " is selected.");
                 tag = keywordRankingTag;
-                fragment = new KeywordRankingFragment();
+                fragment = KeywordRankingFragment.newInstance();
                 binding.includedAppBar.toolbar.setTitle(getString(R.string.title_keyword_ranking));
                 break;
             case R.id.nav_timeline:
                 Log.d(TAG, timelineTag + " is selected.");
                 tag = timelineTag;
-                fragment = new TimelineFragment();
+                fragment = TimelineFragment.newInstance();
                 binding.includedAppBar.toolbar.setTitle(getString(R.string.title_timeline));
                 break;
             case R.id.nav_logout:
@@ -160,6 +157,7 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
         }
 
         binding.drawerLayout.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
@@ -214,11 +212,9 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
                     Log.d(TAG, "unlink to kakao is successful : , " + result.toString());
                     GlobalApplication.setCurrentUserId(defaultUserId);
 
-                    Call<DefaultApi> call = GlobalApplication.getApiInterface().unlinkUserProperty(result);
+                    Call<DefaultApi> call = GlobalApplication.getApiInterface().unlinkUserRequest(result);
                     call.enqueue(new Callback<DefaultApi>() {
-                        /**
-                         * DB에 접근하여 등록된 회원 정보를 삭제한다.
-                         */
+                        // DB에 접근하여 등록된 회원 정보를 삭제한다.
                         @Override
                         public void onResponse(Call<DefaultApi> call, Response<DefaultApi> response) {
                             if (response.body().getCode() == 1) {
@@ -239,36 +235,27 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
         }
     }
 
-    private void sendDefaultFeedTemplate() {
-        FeedTemplate params = FeedTemplate
-                .newBuilder(ContentObject.newBuilder("딸기 치즈 케익",
-                        "http://mud-kage.kakao.co.kr/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png",
-                        LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
-                                .setMobileWebUrl("https://developers.kakao.com").build())
-                        .setDescrption("#케익 #딸기 #삼평동 #카페 #분위기 #소개팅")
-                        .build())
-                .setSocial(SocialObject.newBuilder().setLikeCount(286).setCommentCount(45)
-                        .setSharedCount(845).build())
-                .addButton(new ButtonObject("웹으로 보기", LinkObject.newBuilder().setWebUrl("https://developers.kakao.com").setMobileWebUrl("https://developers.kakao.com").build()))
-                .addButton(new ButtonObject("앱으로 보기", LinkObject.newBuilder()
-                        .setWebUrl("https://developers.kakao.com")
-                        .setMobileWebUrl("https://developers.kakao.com")
-                        .setAndroidExecutionParams("key1=value1")
-                        .setIosExecutionParams("key1=value1")
-                        .build()))
-                .build();
+    public void sendKakaoLink() {
+        try {
+            final KakaoLink link = KakaoLink.getKakaoLink(this);
+            final KakaoTalkLinkMessageBuilder builder = link.createKakaoTalkLinkMessageBuilder();
 
+            String title = "청년이 ‘죄송’하지 않을때까지";
+            String content = "신문 취재엔 응했지만 내심 ‘악플’을 걱정했다. 어려운 사람을 보고도...";
+            String imgUrl = "http://dimg.donga.com/a/180/120/95/2/wps/NEWS/IMAGE/2017/06/27/85071743.1.jpg";
+            String url = "http://news.donga.com/List/3/all/20170627/85071744/1";
 
-        KakaoLinkService.getInstance().sendDefault(this, params, new ResponseCallback<KakaoLinkResponse>() {
-            @Override
-            public void onFailure(ErrorResult errorResult) {
-                Logger.e(errorResult.toString());
-            }
+            builder.addImage(imgUrl, 300, 200)
+                    .addText(title + "\n\n"
+                            + content + "\n\n"
+                            + "자세히 보기 >> \n"
+                            + url)
+                    .build();
 
-            @Override
-            public void onSuccess(KakaoLinkResponse result) {
-                Log.d(TAG, "Send KakaoLink");
-            }
-        });
+            /*메시지 발송*/
+            link.sendMessage(builder, this);
+        } catch (KakaoParameterException e) {
+            e.printStackTrace();
+        }
     }
 }

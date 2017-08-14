@@ -6,14 +6,23 @@ package com.mkm.hanium.jjack.keyword_ranking;
 
 public class KeywordRankingItem {
 
+    private int keywordID;
     private int ranking;
     private String keywordName;
     private int count;
 
-    public KeywordRankingItem(int ranking, String keywordName, int count) {
+    public KeywordRankingItem(int keywordID, int ranking, String keywordName, int count) {
+        this.keywordID = keywordID;
         this.ranking = ranking;
         this.keywordName = keywordName;
         this.count = count;
+    }
+
+    public int getKeywordID() {
+        return keywordID;
+    }
+    public void setKeywordID(int keywordId) {
+        this.keywordID = keywordId;
     }
 
     public int getRanking() {

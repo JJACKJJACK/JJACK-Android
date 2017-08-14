@@ -12,7 +12,7 @@ public interface ApiInterface {
     @Headers({"Accept: application/json"})
     @FormUrlEncoded
     @POST("member/insert")
-    Call<DefaultApi> sendUserProperty(
+    Call<DefaultApi> submitUserPropertyRequest(
             @Field("id") long userId,
             @Field("gender") String gender,
             @Field("year") int year);
@@ -20,13 +20,17 @@ public interface ApiInterface {
     @Headers({"Accept: application/json"})
     @FormUrlEncoded
     @POST("member/delete")
-    Call<DefaultApi> unlinkUserProperty(@Field("id") long userId);
+    Call<DefaultApi> unlinkUserRequest(@Field("id") long userId);
 
     @Headers({"Accept: application/json"})
-    @GET("keyword/get/ranking")
+    @GET("keyword/ranking")
     Call<KeywordRankingRequestApi> keywordRankingRequest();
 
     @Headers({"Accept: application/json"})
     @GET("article")
     Call<DefaultApi> acticleRequest(@Query("id") int articleId);
+
+    @Headers({"Accept: application/json"})
+    @GET("log/recent")
+    Call<KeywordRankingSearchLogRequestApi> keywordRankingSearchLogRequest(@Query("keyword") String keywordName);
 }

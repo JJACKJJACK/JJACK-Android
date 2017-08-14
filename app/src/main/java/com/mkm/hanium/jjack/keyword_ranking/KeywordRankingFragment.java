@@ -1,16 +1,16 @@
 package com.mkm.hanium.jjack.keyword_ranking;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mkm.hanium.jjack.R;
+import com.mkm.hanium.jjack.common.BindFragment;
 import com.mkm.hanium.jjack.common.GlobalApplication;
+import com.mkm.hanium.jjack.databinding.FragmentKeywordRankingBinding;
 import com.mkm.hanium.jjack.util.KeywordRankingRequestApi;
 
 import java.util.ArrayList;
@@ -24,32 +24,36 @@ import retrofit2.Response;
  * Created by MIN on 2017-05-20.
  */
 
-public class KeywordRankingFragment extends Fragment {
+public class KeywordRankingFragment extends BindFragment<FragmentKeywordRankingBinding> {
 
-//    private FragmentKeywordRankingBinding binding;
+    public static KeywordRankingFragment newInstance() {
+        return new KeywordRankingFragment();
+    }
 
-    private final String TAG = this.getClass().getSimpleName();
     private List<KeywordRankingItem> list;
     private KeywordRankingAdapter adapter;
-    private RecyclerView recyclerView;
 
-//    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        Log.d(TAG, "onActivityCreated()");
-//        binding = FragmentKeywordRankingBinding.bind(getView());
-//    }
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_keyword_ranking;
+    }
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView()");
-        View layout = inflater.inflate(R.layout.fragment_keyword_ranking, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
 
-        list = new ArrayList<>();
-
-        setRecyclerView(layout);
+        this.list = new ArrayList<>();
+        binding.setFragment(this);
+        setRecyclerView();
         loadData();
 
-        return layout;
+        return binding.getRoot();
+    }
+
+    private void setRecyclerView() {
+        adapter = new KeywordRankingAdapter(getActivity(), list, binding.recyclerViewKeywordRanking);
+        binding.recyclerViewKeywordRanking.setAdapter(adapter);
+        binding.recyclerViewKeywordRanking.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void loadData() {
@@ -57,10 +61,10 @@ public class KeywordRankingFragment extends Fragment {
         call.enqueue(new Callback<KeywordRankingRequestApi>() {
             @Override
             public void onResponse(Call<KeywordRankingRequestApi> call, Response<KeywordRankingRequestApi> response) {
-                if(response.body().getCode() == 1) {
-                    Log.d(TAG, "Keyword Ranking Data Load.");
+                if (response.body().getCode() == 1) {
                     list = response.body().getResult();
-                    adapter.addList(list);
+                    adapter.updateItems(list);
+                    Log.d(TAG, "Keyword Ranking Data Load");
                 } else {
                     Log.d(TAG, response.body().getMessage());
                 }
@@ -71,12 +75,5 @@ public class KeywordRankingFragment extends Fragment {
                 Log.e(TAG, "Not Connected to server :\n" + t.getMessage() + call.request());
             }
         });
-    }
-
-    private void setRecyclerView(View v) {
-        adapter = new KeywordRankingAdapter(getActivity(), list);
-        recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view_keyword_ranking);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 }
