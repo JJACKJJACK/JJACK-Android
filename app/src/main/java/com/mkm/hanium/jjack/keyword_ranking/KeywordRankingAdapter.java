@@ -15,6 +15,8 @@ import java.util.List;
 
 /**
  * Created by MIN on 2017-06-24.
+ * 키워드 랭킹 리사이클러뷰 어댑터
+ * onClick에서 검색량 그래프를 출력하는 팝업으로 이동함
  */
 
 public class KeywordRankingAdapter extends RecyclerView.Adapter<KeywordRankingViewHolder> {
@@ -23,13 +25,13 @@ public class KeywordRankingAdapter extends RecyclerView.Adapter<KeywordRankingVi
     private List<KeywordRankingItem> items;
     private RecyclerView recyclerView;
 
-    public KeywordRankingAdapter(Context context, List<KeywordRankingItem> items, RecyclerView recyclerView) {
+    KeywordRankingAdapter(Context context, List<KeywordRankingItem> items, RecyclerView recyclerView) {
         this.context = context;
         this.items = items;
         this.recyclerView = recyclerView;
     }
 
-    public void updateItems(List<KeywordRankingItem> list) {
+    void updateItems(List<KeywordRankingItem> list) {
         items = list;
         this.notifyDataSetChanged();
     }

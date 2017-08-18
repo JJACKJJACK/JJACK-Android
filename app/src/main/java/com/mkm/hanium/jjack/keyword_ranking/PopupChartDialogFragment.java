@@ -2,6 +2,7 @@ package com.mkm.hanium.jjack.keyword_ranking;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -32,6 +33,7 @@ import retrofit2.Response;
 
 /**
  * Created by MIN on 2017-07-03.
+ * 최근 검색 그래프를 띄우는 팝업 프래그먼트를 정의
  */
 
 public class PopupChartDialogFragment extends DialogFragment {
@@ -53,22 +55,14 @@ public class PopupChartDialogFragment extends DialogFragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.layout_popupwindow_keyword_ranking_chart, container, false);
 
         keyword = getArguments().getString("keyword");
+
         labels = new ArrayList<>();
         entries = new ArrayList<>();
+        binding.setFragment(this);
 
         loadData();
 
         return binding.getRoot();
-    }
-
-    private void inputTestData() {
-        String day[] = {"07/26", "07/27", "07/28", "07/29", "07/30"};
-        int value[] = {8, 6, 2, 5, 9};
-
-        for(int i = 0; i < 5; i++) {
-            labels.add(day[i]);
-            entries.add(new Entry(value[i], i));
-        }
     }
 
     private void loadData() {
@@ -76,17 +70,17 @@ public class PopupChartDialogFragment extends DialogFragment {
                 GlobalApplication.getApiInterface().keywordRankingSearchLogRequest(keyword);
         call.enqueue(new Callback<KeywordRankingSearchLogRequestApi>() {
             @Override
-            public void onResponse(Call<KeywordRankingSearchLogRequestApi> call, Response<KeywordRankingSearchLogRequestApi> response) {
+            public void onResponse(@NonNull Call<KeywordRankingSearchLogRequestApi> call, @NonNull Response<KeywordRankingSearchLogRequestApi> response) {
                 if (response.body().getCode() == 1) {
                     Log.d(TAG, "(" + keyword + ") search log data load");
                     ArrayList<KeywordRankingSearchLogRequestApi.SearchLogItem> list = response.body().getResult();
-                    for(int i = list.size() - 1; i > 0; i--) {
+                    for(int i = list.size() - 2; i > 0; i--) {
                         // 받아온 데이터를 월/일 형식으로 변환
                         String date = list.get(i).getDate().substring(5, 7)
                                 + "/" + list.get(i).getDate().substring(8, 10);
 
                         labels.add(date);
-                        entries.add(new Entry(list.get(i).getHits(), list.size() - 1 - i ));
+                        entries.add(new Entry(list.get(i).getHits(), list.size() - 2 - i ));
 
                         Log.e(TAG, date + " " + list.get(i).getHits());
                     }
@@ -99,7 +93,7 @@ public class PopupChartDialogFragment extends DialogFragment {
             }
 
             @Override
-            public void onFailure(Call<KeywordRankingSearchLogRequestApi> call, Throwable t) {
+            public void onFailure(@NonNull Call<KeywordRankingSearchLogRequestApi> call, @NonNull Throwable t) {
                 Log.e(TAG, "Not Connected to server :\n" + t.getMessage() + call.request());
             }
         });
@@ -150,5 +144,9 @@ public class PopupChartDialogFragment extends DialogFragment {
         });
         binding.chartKeywordRanking.setDescription("");
         binding.chartKeywordRanking.invalidate();
+    }
+
+    public void onClick(View v) {
+        this.dismiss();
     }
 }

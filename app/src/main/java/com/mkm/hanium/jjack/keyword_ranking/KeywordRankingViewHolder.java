@@ -8,13 +8,14 @@ import com.mkm.hanium.jjack.databinding.ItemKeywordRankingBinding;
 
 /**
  * Created by MIN on 2017-06-24.
+ * 키워드 랭킹 뷰홀더
  */
 
-public class KeywordRankingViewHolder extends RecyclerView.ViewHolder {
+class KeywordRankingViewHolder extends RecyclerView.ViewHolder {
 
     protected ItemKeywordRankingBinding binding;
 
-    public KeywordRankingViewHolder(View itemView) {
+    KeywordRankingViewHolder(View itemView) {
         super(itemView);
         binding = DataBindingUtil.bind(itemView);
     }

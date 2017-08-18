@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Created by MIN on 2017-07-23.
+ * 타임라인 리사이클러뷰 어댑터
  */
 
 public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -23,14 +24,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * public static final int END = 2;    (위방향 단일 선)
      * public static final int ONLYONE = 3;
      */
-    public static final int TYPE_HEADER = 1;
-    public static final int TYPE_CONTENT = 0;
-    public static final int TYPE_FOOTER = 2;
+    static final int TYPE_HEADER = 1;
+    static final int TYPE_CONTENT = 0;
+    static final int TYPE_FOOTER = 2;
 
     private Context context;
     private List<TimelineItem> items;
 
-    public TimelineAdapter(Context context, List<TimelineItem> items) {
+    TimelineAdapter(Context context, List<TimelineItem> items) {
         this.context = context;
         this.items = items;
     }

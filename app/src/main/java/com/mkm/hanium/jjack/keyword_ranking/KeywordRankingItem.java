@@ -2,6 +2,7 @@ package com.mkm.hanium.jjack.keyword_ranking;
 
 /**
  * Created by MIN on 2017-06-24.
+ * 키워드 랭킹 리사이클러 뷰 아이템을 저장하는 클래스
  */
 
 public class KeywordRankingItem {

@@ -5,10 +5,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by 김민선 on 2017-05-21.
+ * 레트로핏 기본 정의
  */
 
 public class ApiClient {
-    public static final String Base_URL = "http://211.253.8.172/";
+    private static final String Base_URL = "http://211.253.8.172/";
     private static Retrofit retrofit = null;
 
     private ApiClient() {}

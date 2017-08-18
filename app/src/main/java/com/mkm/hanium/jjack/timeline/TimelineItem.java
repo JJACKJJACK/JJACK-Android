@@ -2,19 +2,20 @@ package com.mkm.hanium.jjack.timeline;
 
 /**
  * Created by MIN on 2017-07-29.
+ * 타임라인의 아이템 뷰 타입을 저장할 클래스
  */
 
-public class TimelineItem {
-    int viewType;
+class TimelineItem {
+    private int viewType;
 
-    public TimelineItem(int viewType) {
+    TimelineItem(int viewType) {
         this.viewType = viewType;
     }
 
-    public int getViewType() {
+    int getViewType() {
         return viewType;
     }
-    public void setViewType(int viewType) {
+    void setViewType(int viewType) {
         this.viewType = viewType;
     }
 }

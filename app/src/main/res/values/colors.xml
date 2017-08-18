@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorPrimaryLight">#4DB6AC</color>
     <color name="colorAccent">#FF4081</color>
 
     <!-- NEW DISIGN -->
@@ -13,4 +14,17 @@
     <color name="color6">#FFFFFF</color>
     <color name="color7">#000000</color>
     <color name="color8">#4A4A4C</color>
+
+    <!-- Kakao signup -->
+    <color name="kakao_yellow">#FAE100</color>
+    <color name="kakao_text">#1E1E1E</color>
+    <color name="btn_signup_normal">#009688</color>
+    <color name="btn_signup_pressed">#00796B</color>
+    <color name="btn_signup_unable">#1F000000</color>
+
+    <!-- text color -->
+    <color name="text_normal">#DF000000</color>
+    <color name="text_caption">#8A000000</color>
+    <color name="text_signup">#FFFFFF</color>
+
 </resources>

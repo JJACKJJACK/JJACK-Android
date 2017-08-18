@@ -8,9 +8,17 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:background="@color/color4"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/signup_text"
+            android:textSize="@dimen/text_size_title"
+            android:layout_marginTop="72dp"
+            android:textColor="@color/color7"/>
 
         <include
             android:id="@+id/extra_user_property"
@@ -19,19 +27,21 @@
         <Button
             android:id="@+id/btn_signup"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="@dimen/com_kakao_profile_property_margin"
-            android:layout_marginBottom="@dimen/com_kakao_profile_property_margin"
-            android:layout_marginLeft="@dimen/com_kakao_profile_property_margin"
-            android:layout_marginRight="@dimen/com_kakao_profile_property_margin"
-            android:textSize="@dimen/com_kakao_profile_property_text"
+            android:layout_height="@dimen/btn_height_big"
+            android:layout_marginTop="@dimen/btn_margin"
+            android:layout_marginBottom="@dimen/btn_margin"
+            android:layout_marginLeft="@dimen/btn_margin"
+            android:layout_marginRight="@dimen/btn_margin"
             android:textStyle="bold"
-            style="@style/button"
-            android:background="@drawable/selector_button_01"
-            android:paddingLeft="@dimen/com_kakao_padding"
-            android:paddingRight="@dimen/com_kakao_padding"
+            android:background="@drawable/selector_button_signup"
+            android:paddingLeft="@dimen/btn_padding"
+            android:paddingRight="@dimen/btn_padding"
             android:text="@string/signup_button"
+            android:textSize="@dimen/text_size_btn"
+            android:textColor="@color/text_signup"
+            android:elevation="@dimen/btn_elevation"
+            android:translationZ="0dp"
             android:enabled="false"
-            android:onClick="@{activity::onButtonClick}" />
+            android:onClick="@{activity::onClick}" />
     </LinearLayout>
 </layout>

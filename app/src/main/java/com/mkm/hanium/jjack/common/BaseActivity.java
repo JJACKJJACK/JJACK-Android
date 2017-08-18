@@ -8,6 +8,7 @@ import android.util.Log;
 
 /**
  * Created by MIN on 2017-05-28.
+ * 로그 작업과 액티비티 이동에 관해 정의한 클래스
  */
 
 public class BaseActivity extends AppCompatActivity {

@@ -8,13 +8,14 @@ import com.mkm.hanium.jjack.databinding.ItemTimelineHeaderBinding;
 
 /**
  * Created by MIN on 2017-07-29.
+ * 타임라인 헤더 아이템 뷰홀더
  */
 
-public class TimelineHeaderViewHolder extends RecyclerView.ViewHolder implements TimelineViewHolderBinder {
+class TimelineHeaderViewHolder extends RecyclerView.ViewHolder implements TimelineViewHolderBinder {
 
-    protected ItemTimelineHeaderBinding binding;
+    private ItemTimelineHeaderBinding binding;
 
-    public TimelineHeaderViewHolder(View itemView, int viewType) {
+    TimelineHeaderViewHolder(View itemView, int viewType) {
         super(itemView);
         binding = DataBindingUtil.bind(itemView);
         binding.timelineMarkerHeader.initLine(viewType);

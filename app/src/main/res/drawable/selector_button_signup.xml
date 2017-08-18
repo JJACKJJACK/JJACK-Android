@@ -3,12 +3,12 @@
     <item
         android:state_enabled="true"
         android:state_pressed="true"
-        android:drawable="@drawable/btn_b_press" />
+        android:drawable="@color/btn_signup_pressed">
+    </item>
     <item
         android:state_enabled="true"
-        android:drawable="@drawable/btn_b" />
-
+        android:drawable="@color/btn_signup_normal" />
     <item
         android:state_enabled="false"
-        android:drawable="@drawable/btn_a" />
+        android:drawable="@color/btn_signup_unable" />
 </selector>

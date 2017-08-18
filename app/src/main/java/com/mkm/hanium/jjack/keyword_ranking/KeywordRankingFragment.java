@@ -1,6 +1,7 @@
 package com.mkm.hanium.jjack.keyword_ranking;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import retrofit2.Response;
 
 /**
  * Created by MIN on 2017-05-20.
+ * 키워드 랭킹 프래그먼트를 정의하는 클래스
  */
 
 public class KeywordRankingFragment extends BindFragment<FragmentKeywordRankingBinding> {
@@ -60,7 +62,7 @@ public class KeywordRankingFragment extends BindFragment<FragmentKeywordRankingB
         Call<KeywordRankingRequestApi> call = GlobalApplication.getApiInterface().keywordRankingRequest();
         call.enqueue(new Callback<KeywordRankingRequestApi>() {
             @Override
-            public void onResponse(Call<KeywordRankingRequestApi> call, Response<KeywordRankingRequestApi> response) {
+            public void onResponse(@NonNull Call<KeywordRankingRequestApi> call, @NonNull Response<KeywordRankingRequestApi> response) {
                 if (response.body().getCode() == 1) {
                     list = response.body().getResult();
                     adapter.updateItems(list);
@@ -71,7 +73,7 @@ public class KeywordRankingFragment extends BindFragment<FragmentKeywordRankingB
             }
 
             @Override
-            public void onFailure(Call<KeywordRankingRequestApi> call, Throwable t) {
+            public void onFailure(@NonNull Call<KeywordRankingRequestApi> call, @NonNull Throwable t) {
                 Log.e(TAG, "Not Connected to server :\n" + t.getMessage() + call.request());
             }
         });

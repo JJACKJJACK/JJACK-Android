@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by MIN on 2017-07-04.
+ * 타임라인 프래그먼트를 정의하는 클래스
  */
 
 public class TimelineFragment extends BindFragment<FragmentTimelineBinding> {

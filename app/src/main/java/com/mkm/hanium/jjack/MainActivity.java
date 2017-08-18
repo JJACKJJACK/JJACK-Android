@@ -2,6 +2,7 @@ package com.mkm.hanium.jjack;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -118,7 +119,7 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -168,10 +169,8 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
             UserManagement.requestLogout(new LogoutResponseCallback() {
                 @Override
                 public void onCompleteLogout() {
-                    /**
-                     * GlobalApplication에 저장된 유저 ID를 비회원값(-5000)으로 변경하고
-                     * 로그인 액티비티로 돌아간다.
-                     */
+                    // GlobalApplication에 저장된 유저 ID를 비회원값(-5000)으로 변경하고
+                    // 로그인 액티비티로 돌아간다.
                     Log.d(TAG, "logout success.");
                     GlobalApplication.setCurrentUserId(defaultUserId);
                     activityChangeAndFinish(LoginActivity.class);
@@ -216,7 +215,7 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
                     call.enqueue(new Callback<DefaultApi>() {
                         // DB에 접근하여 등록된 회원 정보를 삭제한다.
                         @Override
-                        public void onResponse(Call<DefaultApi> call, Response<DefaultApi> response) {
+                        public void onResponse(@NonNull Call<DefaultApi> call, @NonNull Response<DefaultApi> response) {
                             if (response.body().getCode() == 1) {
                                 Log.d(TAG, "unlink to DB is successful");
                             } else {
@@ -225,7 +224,7 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
                         }
 
                         @Override
-                        public void onFailure(Call<DefaultApi> call, Throwable t) {
+                        public void onFailure(@NonNull Call<DefaultApi> call, @NonNull Throwable t) {
                             Log.e("SignupActivity", "Not Connected to server :\n" + t.getMessage() + call.request());
                         }
                     });

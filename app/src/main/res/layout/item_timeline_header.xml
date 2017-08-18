@@ -18,7 +18,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp" >
+        android:layout_marginLeft="5dp"
+        tools:ignore="RtlHardcoded" >
 
         <!-- TODO : 속 빈 marker로 변경 -->
         <com.github.vipulasri.timelineview.TimelineView

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.util.exception.KakaoException;
@@ -16,6 +17,7 @@ import com.mkm.hanium.jjack.databinding.ActivityLoginBinding;
 
 /**
  * Created by MIN on 2017-04-17.
+ * 로그인 액티비티를 정의함.
  */
 
 public class LoginActivity extends BindActivity<ActivityLoginBinding> {
@@ -29,16 +31,26 @@ public class LoginActivity extends BindActivity<ActivityLoginBinding> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding.setActivity(this);
-
         callback = new SessionCallback();
         Session.getCurrentSession().addCallback(callback);
         Session.getCurrentSession().checkAndImplicitOpen();
+
     }
 
     public void onClick(View v) {
-        activityChangeAndFinish(MainActivity.class);
+        switch(v.getId()) {
+            case R.id.btn_login_guest:
+                activityChangeAndFinish(MainActivity.class);
+                break;
+            case R.id.btn_login_kakao:
+                if(callback == null) {
+                    callback = new SessionCallback();
+                    Session.getCurrentSession().addCallback(callback);
+                    Session.getCurrentSession().checkAndImplicitOpen();
+                }
+                Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, this);
+        }
     }
 
     @Override

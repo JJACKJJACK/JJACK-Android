@@ -2,6 +2,7 @@ package com.mkm.hanium.jjack.login;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -34,6 +35,7 @@ import retrofit2.Response;
 
 /**
  * Created by MIN on 2017-05-20.
+ * 로그인 작업을 수행하는 액티비티를 정의
  */
 
 public class SignupActivity extends BaseActivity
@@ -58,7 +60,7 @@ public class SignupActivity extends BaseActivity
 
             /**
              * 로그인에 실패한 경우
-             * @param errorResult
+             * @param errorResult 에러 결과
              */
             @Override
             public void onFailure(ErrorResult errorResult) {
@@ -135,7 +137,7 @@ public class SignupActivity extends BaseActivity
         }
     }
 
-    public void onButtonClick(View v) {
+    public void onClick(View v) {
         HashMap<String, String> properties = new HashMap<>();
 
         String year = binding.extraUserProperty.spinnerYear.getSelectedItem().toString();
@@ -169,7 +171,7 @@ public class SignupActivity extends BaseActivity
 
                 call.enqueue(new Callback<DefaultApi>() {
                     @Override
-                    public void onResponse(Call<DefaultApi> call, Response<DefaultApi> response) {
+                    public void onResponse(@NonNull Call<DefaultApi> call, @NonNull Response<DefaultApi> response) {
                         if(response.body().getCode() == 1) {
                             Log.i(TAG, "Sign up success : ID(" + result.toString()
                                     + "), year(" + year + "), gender(" + gender + ")");
@@ -180,7 +182,7 @@ public class SignupActivity extends BaseActivity
                     }
 
                     @Override
-                    public void onFailure(Call<DefaultApi> call, Throwable t) {
+                    public void onFailure(@NonNull Call<DefaultApi> call, @NonNull Throwable t) {
                         Log.e(TAG, "Not Connected to server :\n" + t.getMessage() + call.request());
                     }
                 });
@@ -198,7 +200,6 @@ public class SignupActivity extends BaseActivity
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getApplicationContext(), "itemSelect", Toast.LENGTH_SHORT).show();
         int selectedSpinner = -1;
 
         if(parent.getId() == R.id.spinner_year)
@@ -206,11 +207,7 @@ public class SignupActivity extends BaseActivity
         else if(parent.getId() == R.id.spinner_gender)
             selectedSpinner = 1;
 
-        if(position == 0 && selectedSpinner != -1) {
-            enableButton[selectedSpinner] = false;
-        } else {
-            enableButton[selectedSpinner] = true;
-        }
+        enableButton[selectedSpinner] = !(position == 0 && selectedSpinner != -1);
 
         // 두 스피너 모두 정상적인 값이 선택되어야 버튼이 활성화됨
         setSignupBtnEnable(enableButton[0] && enableButton[1]);
