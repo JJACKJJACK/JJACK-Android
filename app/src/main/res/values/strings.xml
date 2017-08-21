@@ -9,11 +9,22 @@
     <string name="start_guest">로그인 없이 시작하기</string>
     <string name="start_kakao">카카오계정으로 로그인</string>
     <string name="signup_button">가입하기</string>
+    <string name="signup_text">회원가입</string>
+
+    <string name="close">닫기</string>
+    <string name="best">best</string>
+
     <string name="popup_chart_title">최근 검색 추이</string>
 
+    <!-- Navigation menu -->
+    <string name="profile_nicname">비회원입니다</string>
+    <string name="profile_email">터치하여 로그인하세요</string>
+    <string name="nav_menu_01">계정</string>
+    <string name="profile_image">프로필 사진</string>
     <string name="title_timeline">타임라인</string>
     <string name="title_keyword_ranking">키워드 랭킹</string>
+    <string name="logout">logout</string>
+    <string name="unlink">탈퇴</string>
 
-    <string name="signup_text">회원가입</string>
-    <string name="close">닫기</string>
+    <string name="keyword_ranking_default">20대 남성</string>
 </resources>

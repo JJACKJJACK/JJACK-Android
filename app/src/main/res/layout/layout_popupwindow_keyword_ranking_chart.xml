@@ -11,8 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:elevation="@dimen/dialog_elevation"
-        android:paddingBottom="@dimen/dialog_padding" >
+        android:elevation="@dimen/dialog_elevation" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -20,17 +19,16 @@
             android:text="@string/popup_chart_title"
             android:textColor="@color/text_normal"
             android:textSize="@dimen/text_size_title"
-            android:paddingLeft="@dimen/dialog_padding"
-            android:paddingRight="@dimen/dialog_padding"
-            android:paddingTop="@dimen/dialog_padding"/>
+            android:paddingLeft="@dimen/dialog_margin"
+            android:paddingTop="@dimen/dialog_margin"
+            tools:ignore="RtlSymmetry" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart_keyword_ranking"
             android:layout_width="320dp"
             android:layout_height="350dp"
-            android:paddingTop="@dimen/dialog_title_padding"
-            android:paddingLeft="@dimen/dialog_padding"
-            android:paddingRight="@dimen/dialog_padding" />
+            android:layout_marginLeft="@dimen/dialog_margin"
+            android:layout_marginRight="@dimen/dialog_margin" />
 
         <Button
             android:layout_width="wrap_content"
@@ -39,10 +37,9 @@
             android:textSize="@dimen/text_size_btn"
             android:textColor="@color/colorPrimary"
             android:background="#00FFFFFF"
-            android:layout_marginTop="@dimen/dialog_margin"
-            android:paddingRight="@dimen/dialog_padding"
             android:layout_gravity="right"
             android:onClick="@{fragment::onClick}"
+            android:layout_marginBottom="@dimen/dialog_btn_margin"
             tools:ignore="RtlSymmetry" />
 
     </LinearLayout>

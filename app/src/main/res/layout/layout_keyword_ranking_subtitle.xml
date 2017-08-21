@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_subtitle_height" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/keyword_ranking_default"
+            android:textSize="@dimen/text_size_title"
+            android:textColor="@color/text_normal"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/list_margin"
+            android:paddingTop="@dimen/list_top_margin"
+            tools:ignore="RtlSymmetry" />
+
+        <Spinner
+            android:id="@+id/spinner_keyword_ranking_generation"
+            android:layout_width="@dimen/spinner_small_width"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/spinner_margin"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/spinner_keyword_ranking_gender"
+            android:layout_toStartOf="@+id/spinner_keyword_ranking_gender"
+            tools:ignore="RtlSymmetry" />
+
+        <Spinner
+            android:id="@+id/spinner_keyword_ranking_gender"
+            android:layout_width="@dimen/spinner_small_width"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/spinner_margin"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            tools:ignore="RtlSymmetry" />
+
+    </RelativeLayout>
+</layout>

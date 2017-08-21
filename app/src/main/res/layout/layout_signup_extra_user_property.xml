@@ -18,9 +18,9 @@
             android:id="@+id/spinner_year"
             android:layout_width="@dimen/spinner_width"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/spinner_padding_top_and_bottom"
-            android:paddingBottom="@dimen/spinner_padding_top_and_bottom"
-            android:paddingLeft="@dimen/spinner_padding_left"
+            android:paddingTop="@dimen/spinner_vertical_margin"
+            android:paddingBottom="@dimen/spinner_vertical_margin"
+            android:paddingLeft="@dimen/spinner_margin_left"
             android:layout_marginRight="@dimen/spinner_margin"
             tools:ignore="RtlSymmetry" />
 
@@ -28,9 +28,9 @@
             android:id="@+id/spinner_gender"
             android:layout_width="@dimen/spinner_width"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/spinner_padding_top_and_bottom"
-            android:paddingBottom="@dimen/spinner_padding_top_and_bottom"
-            android:paddingLeft="@dimen/spinner_padding_left"
+            android:paddingTop="@dimen/spinner_vertical_margin"
+            android:paddingBottom="@dimen/spinner_vertical_margin"
+            android:paddingLeft="@dimen/spinner_margin_left"
             android:layout_marginLeft="@dimen/spinner_margin"
             tools:ignore="RtlSymmetry" />
 

@@ -53,6 +53,12 @@ public class KeywordRankingAdapter extends RecyclerView.Adapter<KeywordRankingVi
         // 텍스트뷰의 text="@{item.xx}가 그 예시이다. xx는 아이템을 저장한 클래스의 멤버 변수이다.
         // @{ } 내부에는 String값을 넣어준다. Integer.ToString()이나 +, - 등 연산도 사용할 수 있다.
         holder.binding.setItem(item);
+
+        // 랭킹 1위만 best 문구를 출력한다.
+        if(position == 0)
+            holder.binding.tvBest.setVisibility(View.VISIBLE);
+        else
+            holder.binding.tvBest.setVisibility(View.INVISIBLE);
     }
 
     @Override

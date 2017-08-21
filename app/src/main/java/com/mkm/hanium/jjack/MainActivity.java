@@ -1,6 +1,6 @@
 package com.mkm.hanium.jjack;
 
-import android.databinding.DataBindingUtil;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.kakao.kakaolink.KakaoLink;
@@ -18,17 +19,24 @@ import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
+import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.KakaoParameterException;
 import com.kakao.util.helper.log.Logger;
 import com.mkm.hanium.jjack.common.BindActivity;
 import com.mkm.hanium.jjack.common.GlobalApplication;
 import com.mkm.hanium.jjack.databinding.ActivityMainBinding;
+import com.mkm.hanium.jjack.databinding.NavHeaderMainBinding;
 import com.mkm.hanium.jjack.keyword_ranking.KeywordRankingFragment;
 import com.mkm.hanium.jjack.login.LoginActivity;
 import com.mkm.hanium.jjack.timeline.TimelineFragment;
 import com.mkm.hanium.jjack.util.BackPressCloseSystem;
 import com.mkm.hanium.jjack.util.DefaultApi;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,11 +48,10 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
     // 데이터바인딩에 사용될 변수.
     // 해당 레이아웃의 이름 + binding으로 자동 생성(activity_main -> ActivityMainBinding)
     private final BackPressCloseSystem mBack = new BackPressCloseSystem(this);
-    private final String title = "키워드 랭킹";
-//    private final String title = getResources().getString(R.string.title_keyword_ranking);
     private final String keywordRankingTag = KeywordRankingFragment.class.getSimpleName();
     private final String timelineTag = TimelineFragment.class.getSimpleName();
-    private final long defaultUserId = -5000;
+
+    private NavHeaderMainBinding navBinding;
 
     @Override
     protected int getLayoutId() {
@@ -55,16 +62,52 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 기존의 setContentView를 대체하며
-        // layout의 모든 view들이 findViewById를 쓰지 않아도 알아서 연결된다.
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        final String title = getString(R.string.title_keyword_ranking);
 
-        // xml include된 layout을 사용하기 위해서는 해당 부분의 id를 반드시 지정해야 한다.
-        // binding.(include필드의id).xxx 식으로 사용한다.
+        // setContentView는 BindActivity에 선언되어 있다.
+
+        // xml의 include 필드는 id를 반드시 지정해야 한다.
+        // binding.(include필드의id).(include 레이아웃의 뷰ID) 식으로 호출한다.
         binding.includedAppBar.toolbar.setTitle(title);
         setSupportActionBar(binding.includedAppBar.toolbar);
 
-        // <layout> 요소의 하위 뷰들의 id는 낙타표기법으로 자동 변환된다.
+        // 네비게이션 뷰 접근을 위한 바인딩 생성
+        navBinding = NavHeaderMainBinding.bind(binding.navView.getHeaderView(0));
+
+        if(GlobalApplication.getUser().isSignup()) {
+            // 지금 막 가입한 유저인 경우 카카오에서 바로 유저 정보를 받을 수 없기 때문에 따로 받아와야 한다.
+            // 카카오 서버에 요청-응답하는 과정이 있어 속도가 늦긴 하지만 profile을 제대로 저장한다.
+            requestUserProperty(navBinding.getRoot().getContext());
+        } else if(!GlobalApplication.getUser().isSignup() && GlobalApplication.getUser().isLogin()){
+            // 이미 회원이면 카카오 로그인 절차에서 프로필 정보를 받아올 수 있다.
+            setProfileImage(navBinding.getRoot().getContext(), GlobalApplication.getUser().getImagePath());
+
+            // 프로필 정보를 네비게이션 헤더에 삽입
+            navBinding.setUser(GlobalApplication.getUser());
+        } else if(!GlobalApplication.getUser().isLogin()) {
+            // 비회원이면 default 정보를 삽입한다.
+            navBinding.navProfileImage.setImageResource(R.drawable.default_user);
+            GlobalApplication.getUser().setProfile(
+                    null,
+                    getString(R.string.profile_nicname),
+                    getString(R.string.profile_email)
+            );
+
+            // 프로필 정보를 네비게이션 헤더에 삽입
+            navBinding.setUser(GlobalApplication.getUser());
+        }
+
+        // 비회원인 경우 프로필 정보를 클릭하여 가입할 수 있음.
+        navBinding.navProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!GlobalApplication.getUser().isLogin()) {
+                    activityChange(LoginActivity.class, "open");
+                }
+            }
+        });
+
+        // <layout> 요소 내에 있는 하위 뷰들의 id는 낙타표기법으로 자동 변환된다.
         // nav_view -> binding.navView
         // 변환된 인스턴스는 객체와 바로 연결된다. binding.navView는 NavigationView형 객체이다.
         binding.navView.setNavigationItemSelectedListener(this);
@@ -163,7 +206,7 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
     }
 
     private void logout() {
-        if(GlobalApplication.getCurrentUserId() == defaultUserId) {
+        if(!GlobalApplication.getUser().isLogin()) {
             Toast.makeText(this, "비로그인 사용자입니다.", Toast.LENGTH_LONG).show();
         } else {
             UserManagement.requestLogout(new LogoutResponseCallback() {
@@ -171,16 +214,16 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
                 public void onCompleteLogout() {
                     // GlobalApplication에 저장된 유저 ID를 비회원값(-5000)으로 변경하고
                     // 로그인 액티비티로 돌아간다.
-                    Log.d(TAG, "logout success.");
-                    GlobalApplication.setCurrentUserId(defaultUserId);
-                    activityChangeAndFinish(LoginActivity.class);
+                    Log.d(TAG, "logout");
+                    GlobalApplication.getUser().clearProfile();
+                    activityChange(LoginActivity.class);
                 }
             });
         }
     }
 
     private void unlink() {
-        if(GlobalApplication.getCurrentUserId() == defaultUserId) {
+        if(!GlobalApplication.getUser().isLogin()) {
             Toast.makeText(this, "비로그인 사용자입니다.", Toast.LENGTH_LONG).show();
         } else {
             UserManagement.requestUnlink(new UnLinkResponseCallback() {
@@ -197,19 +240,20 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
                 @Override
                 public void onSessionClosed(ErrorResult errorResult) {
                     Log.d(TAG, "unlink : Session Closed.");
-                    activityChangeAndFinish(LoginActivity.class);
+                    activityChange(LoginActivity.class);
                 }
 
                 @Override
                 public void onNotSignedUp() {
                     Log.d(TAG, "unlink : Not Signed up.");
-                    activityChangeAndFinish(LoginActivity.class);
+                    activityChange(LoginActivity.class);
                 }
 
                 @Override
                 public void onSuccess(Long result) {
                     Log.d(TAG, "unlink to kakao is successful : , " + result.toString());
-                    GlobalApplication.setCurrentUserId(defaultUserId);
+
+                    GlobalApplication.getUser().clearProfile();
 
                     Call<DefaultApi> call = GlobalApplication.getApiInterface().unlinkUserRequest(result);
                     call.enqueue(new Callback<DefaultApi>() {
@@ -228,12 +272,16 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
                             Log.e("SignupActivity", "Not Connected to server :\n" + t.getMessage() + call.request());
                         }
                     });
-                    activityChangeAndFinish(LoginActivity.class);
+                    activityChange(LoginActivity.class);
                 }
             });
         }
     }
 
+    /**
+     * 카카오 링크의 템플릿 버튼을 이용하려면 도메인 등록이 필요하다.
+     * 도메인 등록을 할 수 없었기 때문에 사진과 text 형식으로 변경하였음.
+     */
     public void sendKakaoLink() {
         try {
             final KakaoLink link = KakaoLink.getKakaoLink(this);
@@ -255,6 +303,61 @@ public class MainActivity extends BindActivity<ActivityMainBinding>
             link.sendMessage(builder, this);
         } catch (KakaoParameterException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 유저의 정보를 로드하는 메소드
+     */
+    private void requestUserProperty(final Context context) {
+        List<String> propertyKeys = new ArrayList<>();
+        propertyKeys.add("kaccount_email");
+        propertyKeys.add("nickname");
+        propertyKeys.add("thumbnail_image");
+
+        UserManagement.requestMe(new MeResponseCallback() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                String message = "failed to get user info. msg=" + errorResult;
+                Logger.d(message);
+            }
+
+            @Override
+            public void onSessionClosed(ErrorResult errorResult) {
+            }
+
+            @Override
+            public void onSuccess(UserProfile userProfile) {
+                Logger.d("UserProfile : " + userProfile);
+
+                // 로그인 정보를 프로필에 저장
+                GlobalApplication.getUser().setProfile(
+                        userProfile.getId(),
+                        userProfile.getThumbnailImagePath(),
+                        userProfile.getNickname(),
+                        userProfile.getEmail(),
+                        true
+                );
+
+                setProfileImage(context, GlobalApplication.getUser().getImagePath());
+                navBinding.setUser(GlobalApplication.getUser());
+            }
+
+            @Override
+            public void onNotSignedUp() { }
+        }, propertyKeys, false);
+    }
+
+    /**
+     * 카카오 프로필 이미지가 있으면 로드하고 없으면 기본 이미지를 출력한다.
+     * @param context 네비게이션 헤더의 context
+     * @param url 카카오 섬네일 이미지 주소
+     */
+    private void setProfileImage(Context context, String url) {
+        if(url != null) {
+            Picasso.with(context).load(url).into(navBinding.navProfileImage);
+        } else {
+            Picasso.with(context).load(R.drawable.default_user).into(navBinding.navProfileImage);
         }
     }
 }

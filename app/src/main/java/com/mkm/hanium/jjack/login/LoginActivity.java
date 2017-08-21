@@ -32,30 +32,42 @@ public class LoginActivity extends BindActivity<ActivityLoginBinding> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding.setActivity(this);
-        callback = new SessionCallback();
-        Session.getCurrentSession().addCallback(callback);
-        Session.getCurrentSession().checkAndImplicitOpen();
 
+        Intent i = getIntent();
+        if(i.getExtras() != null) {
+            // 메인 액티비티에서 프로필을 눌러 로그인하면 바로 세션을 열음
+            sessionOpen();
+        } else {
+            if(callback == null) {
+                callback = new SessionCallback();
+                Session.getCurrentSession().addCallback(callback);
+                Session.getCurrentSession().checkAndImplicitOpen();
+            }
+        }
     }
 
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.btn_login_guest:
-                activityChangeAndFinish(MainActivity.class);
+                activityChange(MainActivity.class);
                 break;
             case R.id.btn_login_kakao:
-                if(callback == null) {
-                    callback = new SessionCallback();
-                    Session.getCurrentSession().addCallback(callback);
-                    Session.getCurrentSession().checkAndImplicitOpen();
-                }
-                Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, this);
+                sessionOpen();
         }
+    }
+
+    public void sessionOpen() {
+        if(callback == null) {
+            callback = new SessionCallback();
+            Session.getCurrentSession().addCallback(callback);
+            Session.getCurrentSession().checkAndImplicitOpen();
+        }
+        Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // 간편로그인시 호출 ,없으면 간편로그인시 로그인 성공화면으로 넘어가지 않음
+        // 간편로그인시 호출, 없으면 간편로그인시 로그인 성공화면으로 넘어가지 않음
         Log.d(TAG, "onActivityResult()");
         if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
             return;

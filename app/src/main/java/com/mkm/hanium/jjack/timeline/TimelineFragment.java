@@ -35,7 +35,6 @@ public class TimelineFragment extends BindFragment<FragmentTimelineBinding> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         binding.setFragment(this);
         inputData();
         setRecyclerView();

@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="계정">
+    <item android:title="@string/nav_menu_01">
         <menu>
             <item
                 android:id="@+id/nav_keyword_ranking"
                 android:icon="@drawable/ic_menu_share"
-                android:title="키워드 랭킹" />
+                android:title="@string/title_keyword_ranking" />
 
             <item
                 android:id="@+id/nav_timeline"
                 android:icon="@drawable/ic_menu_share"
-                android:title="타임라인" />
+                android:title="@string/title_timeline" />
 
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Logout" />
+                android:title="@string/logout" />
             <item
                 android:id="@+id/nav_unlink"
                 android:icon="@drawable/ic_menu_send"
-                android:title="탈퇴" />
+                android:title="@string/unlink" />
         </menu>
     </item>
 

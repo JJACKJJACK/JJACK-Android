@@ -40,14 +40,16 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    protected void activityChangeAndFinish(Class<?> cls) {
+    protected void activityChange(Class<?> cls) {
         final Intent i = new Intent(getApplicationContext(), cls);
         startActivity(i);
         finish();
     }
 
-    protected void activityChange(Class<?> cls) {
+    protected void activityChange(Class<?> cls, String data) {
         final Intent i = new Intent(getApplicationContext(), cls);
+        i.putExtra("command", data);
         startActivity(i);
+        finish();
     }
 }

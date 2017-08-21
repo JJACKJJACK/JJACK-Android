@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.mkm.hanium.jjack"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -39,6 +39,9 @@ dependencies {
 
     // 카카오링크 sdk
     compile group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
+
+    // 피카소 라이브러리
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     // 차트 라이브러리
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'

@@ -3,11 +3,8 @@
     <item
         android:state_enabled="true"
         android:state_pressed="true"
-        android:drawable="@color/btn_signup_pressed" />
+        android:drawable="@color/kakao_dark_yellow" />
     <item
         android:state_enabled="true"
-        android:drawable="@color/btn_signup_normal" />
-    <item
-        android:state_enabled="false"
-        android:drawable="@color/btn_signup_unable" />
+        android:drawable="@color/kakao_yellow" />
 </selector>

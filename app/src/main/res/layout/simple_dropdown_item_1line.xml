@@ -4,6 +4,6 @@
     style="?android:attr/dropDownItemStyle"
     android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
     android:layout_width="match_parent"
-    android:layout_height="94px"
-    android:textSize="33px"
+    android:layout_height="@dimen/spinner_height"
+    android:textSize="@dimen/text_size_subhead"
     android:ellipsize="marquee" />

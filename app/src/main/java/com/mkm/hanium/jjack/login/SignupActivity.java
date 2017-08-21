@@ -39,10 +39,10 @@ import retrofit2.Response;
  */
 
 public class SignupActivity extends BaseActivity
-        implements AdapterView.OnItemSelectedListener{
+        implements AdapterView.OnItemSelectedListener {
 
     private LayoutSignupBinding binding;
-    boolean enableButton[];
+    private boolean enableButton[];
 
     /**
      * requestMe를 호출하여 로그인 작업을 수행한다.
@@ -92,8 +92,16 @@ public class SignupActivity extends BaseActivity
             @Override
             public void onSuccess(UserProfile userProfile) {
                 Log.i(TAG, "UserProfile : " + userProfile.toString());
-                GlobalApplication.setCurrentUserId(userProfile.getId());
-                activityChangeAndFinish(MainActivity.class);
+
+                // 로그인 정보를 프로필에 저장
+                GlobalApplication.getUser().setProfile(
+                        userProfile.getId(),
+                        userProfile.getThumbnailImagePath(),
+                        userProfile.getNickname(),
+                        userProfile.getEmail(),
+                        true
+                );
+                activityChange(MainActivity.class);
             }
         });
     }
@@ -113,7 +121,7 @@ public class SignupActivity extends BaseActivity
 
         setSpinnerItem(list, spinner);
 
-        ArrayAdapter adapter = new ArrayAdapter(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 R.layout.simple_dropdown_item_1line,
                 list);
         spinner.setSelection(0);
@@ -165,7 +173,6 @@ public class SignupActivity extends BaseActivity
                 Log.d(TAG, "onSuccess() : requestSignup");
                 final int year = Integer.parseInt(properties.get("year"));
                 final String gender = properties.get("gender");
-                GlobalApplication.setCurrentUserId(result);
 
                 Call<DefaultApi> call = GlobalApplication.getApiInterface().submitUserPropertyRequest(result, gender, year);
 
@@ -175,7 +182,12 @@ public class SignupActivity extends BaseActivity
                         if(response.body().getCode() == 1) {
                             Log.i(TAG, "Sign up success : ID(" + result.toString()
                                     + "), year(" + year + "), gender(" + gender + ")");
-                            activityChangeAndFinish(MainActivity.class);
+
+                            // 유저 정보 저장
+                            GlobalApplication.getUser().setUserId(result);
+                            GlobalApplication.getUser().setLogin(true);
+
+                            activityChange(MainActivity.class);
                         } else{
                             Log.e(TAG, response.body().getMessage());
                         }

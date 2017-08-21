@@ -17,26 +17,28 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp">
+        android:layout_height="wrap_content" >
 
         <com.github.vipulasri.timelineview.TimelineView
             android:id="@+id/timeline_marker_content"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/timeline_margin"
+            app:marker="@drawable/timeline_marker2"
             app:markerSize="20dp"
-            app:lineSize="3dp"
-            app:line="@color/colorPrimary"/>
+            app:lineSize="@dimen/timeline_line_size"
+            app:line="@color/gray_400" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginTop="@dimen/timeline_margin"
+            android:layout_marginBottom="@dimen/timeline_margin"
+            android:layout_marginLeft="@dimen/timeline_gap_margin"
+            android:layout_marginRight="@dimen/timeline_margin"
             android:layout_gravity="center_vertical"
-            app:cardElevation="1dp"
-            app:contentPadding="15dp" >
+            app:cardElevation="@dimen/btn_elevation"
+            app:contentPadding="@dimen/timeline_content_margin" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,7 +51,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/tv_timeline_content_date"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_size_caption2"
+                    android:textColor="@color/text_caption"
                     tools:text="@{item.date}" />
 
                 <android.support.v7.widget.AppCompatTextView
@@ -57,7 +60,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:id="@+id/tv_timeline_content_title"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/text_normal"
+                    android:textSize="@dimen/text_size_body"
                     tools:text="@{item.content}"/>
 
             </LinearLayout>

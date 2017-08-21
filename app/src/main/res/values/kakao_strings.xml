@@ -9,7 +9,7 @@
         <item>@string/male</item>
     </string-array>
 
-    <string name="male">남자</string>
-    <string name="female">여자</string>
+    <string name="male">남성</string>
+    <string name="female">여성</string>
 
 </resources>
