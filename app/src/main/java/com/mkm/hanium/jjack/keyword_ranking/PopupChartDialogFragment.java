@@ -21,7 +21,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.mkm.hanium.jjack.R;
 import com.mkm.hanium.jjack.common.GlobalApplication;
-import com.mkm.hanium.jjack.databinding.LayoutPopupwindowKeywordRankingChartBinding;
+import com.mkm.hanium.jjack.databinding.PopupwindowKeywordRankingChartBinding;
 import com.mkm.hanium.jjack.util.KeywordRankingSearchLogRequestApi;
 
 import java.text.DecimalFormat;
@@ -41,7 +41,7 @@ public class PopupChartDialogFragment extends DialogFragment {
     // KeywordRankingAdapter.onClick에서 호출됨
 
     private String TAG = this.getClass().getSimpleName();
-    private LayoutPopupwindowKeywordRankingChartBinding binding;
+    private PopupwindowKeywordRankingChartBinding binding;
 
     private ArrayList<String> labels; // x축에 표시될 이름
     private ArrayList<Entry> entries; // y축(데이터)
@@ -52,7 +52,7 @@ public class PopupChartDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.layout_popupwindow_keyword_ranking_chart, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.popupwindow_keyword_ranking_chart, container, false);
 
         keyword = getArguments().getString("keyword");
 
@@ -74,6 +74,7 @@ public class PopupChartDialogFragment extends DialogFragment {
                 if (response.body().getCode() == 1) {
                     Log.d(TAG, "(" + keyword + ") search log data load");
                     ArrayList<KeywordRankingSearchLogRequestApi.SearchLogItem> list = response.body().getResult();
+
                     for(int i = list.size() - 2; i > 0; i--) {
                         // 받아온 데이터를 월/일 형식으로 변환
                         String date = list.get(i).getDate().substring(5, 7)
@@ -81,11 +82,10 @@ public class PopupChartDialogFragment extends DialogFragment {
 
                         labels.add(date);
                         entries.add(new Entry(list.get(i).getHits(), list.size() - 2 - i ));
-
-                        Log.e(TAG, date + " " + list.get(i).getHits());
                     }
 
-                    setGraph();
+                    if(list.size() != 0)
+                        setGraph();
 
                 } else {
                     Log.d(TAG, response.body().getMessage());

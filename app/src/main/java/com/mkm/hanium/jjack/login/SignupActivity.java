@@ -21,7 +21,7 @@ import com.mkm.hanium.jjack.MainActivity;
 import com.mkm.hanium.jjack.R;
 import com.mkm.hanium.jjack.common.BaseActivity;
 import com.mkm.hanium.jjack.common.GlobalApplication;
-import com.mkm.hanium.jjack.databinding.LayoutSignupBinding;
+import com.mkm.hanium.jjack.databinding.ActivitySignupBinding;
 import com.mkm.hanium.jjack.util.DefaultApi;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ import retrofit2.Response;
 public class SignupActivity extends BaseActivity
         implements AdapterView.OnItemSelectedListener {
 
-    private LayoutSignupBinding binding;
+    private ActivitySignupBinding binding;
     private boolean enableButton[];
 
     /**
@@ -107,7 +107,7 @@ public class SignupActivity extends BaseActivity
     }
 
     protected void showSignupPage() {
-        binding = DataBindingUtil.setContentView(this, R.layout.layout_signup);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_signup);
         binding.setActivity(this);
         binding.extraUserProperty.setActivity(this);
         enableButton = new boolean[2];
