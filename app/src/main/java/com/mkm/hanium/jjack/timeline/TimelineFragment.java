@@ -46,11 +46,11 @@ public class TimelineFragment extends BindFragment<FragmentTimelineBinding> {
         list = new ArrayList<>();
 
         list.add(new TimelineHeaderItem(TimelineAdapter.TYPE_HEADER, "Timeline Header Item"));
-        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/12", "Timeline Content Item 1"));
-        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/15", "Timeline Content Item 2"));
-        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/18", "Timeline Content Item 3"));
-        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/20", "Timeline Content Item 4"));
-        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/23", "Timeline Content Item 5"));
+        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/12", "Timeline Content Item 1", null));
+        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/15", "Timeline Content Item 2", null));
+        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/18", "Timeline Content Item 3", null));
+        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/20", "Timeline Content Item 4", null));
+        list.add(new TimelineContentItem(TimelineAdapter.TYPE_CONTENT, "2017/07/23", "Timeline Content Item 5", null));
         list.add(new TimelineHeaderItem(TimelineAdapter.TYPE_FOOTER, "Timeline Footer Item"));
     }
 

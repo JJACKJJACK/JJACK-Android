@@ -13,7 +13,7 @@
         android:gravity="center"
         android:layout_marginTop="144dp">
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_login_guest"
             android:layout_width="match_parent"
             android:layout_height="@dimen/btn_height"
@@ -30,7 +30,7 @@
             android:textSize="@dimen/text_size_btn"
             android:onClick="@{activity::onClick}"/>
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_login_kakao"
             android:layout_width="match_parent"
             android:layout_height="@dimen/btn_height"

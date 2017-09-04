@@ -49,7 +49,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return new TimelineHeaderViewHolder(view, viewType);
         } else if (viewType == TYPE_CONTENT) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_timeline_content, parent, false);
-            return new TimelineContentViewHolder(view, viewType);
+            return new TimelineContentViewHolder(view, viewType, context);
         }
 
         return null;

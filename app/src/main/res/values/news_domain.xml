@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="domain">
+        <item>정치</item>
+        <item>문화</item>
+        <item>경제</item>
+        <item>국제</item>
+        <item>사회/생활</item>
+        <item>스포츠</item>
+        <item>연예</item>
+        <item>IT/과학</item>
+        <item>사설</item>
+        <item>기타</item>
+  </string-array>
+</resources>

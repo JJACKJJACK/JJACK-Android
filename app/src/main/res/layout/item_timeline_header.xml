@@ -19,7 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <!-- TODO : 속 빈 marker로 변경 -->
         <com.github.vipulasri.timelineview.TimelineView
             android:id="@+id/timeline_marker_header"
             android:layout_width="wrap_content"
@@ -39,7 +38,8 @@
             android:layout_marginRight="@dimen/timeline_margin"
             android:layout_gravity="center_vertical"
             app:cardElevation="@dimen/btn_elevation"
-            app:contentPadding="@dimen/timeline_content_margin" >
+            app:contentPadding="@dimen/timeline_content_margin"
+            app:cardCornerRadius="@dimen/card_rounded_corners" >
 
             <LinearLayout
                 android:layout_width="match_parent"

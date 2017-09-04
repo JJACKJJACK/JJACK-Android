@@ -15,7 +15,7 @@ import com.mkm.hanium.jjack.R;
 import com.mkm.hanium.jjack.common.BindFragment;
 import com.mkm.hanium.jjack.common.GlobalApplication;
 import com.mkm.hanium.jjack.databinding.FragmentKeywordRankingBinding;
-import com.mkm.hanium.jjack.util.KeywordRankingRequestApi;
+import com.mkm.hanium.jjack.request_api.KeywordRankingRequestApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +94,7 @@ public class KeywordRankingFragment extends BindFragment<FragmentKeywordRankingB
 
         setSpinnerItem(list, spinner);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<> (getActivity(),
                 R.layout.simple_dropdown_item_1line,
                 list);
         spinner.setSelection(0);

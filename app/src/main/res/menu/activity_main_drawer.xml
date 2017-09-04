@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:id="@+id/nav_news_ranking"
+        android:icon="@drawable/ic_speaker_notes_black_24dp"
+        android:title="@string/menu_news_ranking" />
+    <item
+        android:id="@+id/nav_realtime"
+        android:icon="@drawable/ic_new_releases_black_24dp"
+        android:title="@string/menu_realtime" />
+    <item
+        android:id="@+id/nav_keyword_ranking"
+        android:icon="@drawable/ic_insert_chart_black_24dp"
+        android:title="@string/menu_keyword_ranking" />
+
     <item android:title="@string/nav_menu_01">
         <menu>
             <item
-                android:id="@+id/nav_keyword_ranking"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/title_keyword_ranking" />
+                android:id="@+id/nav_keyword"
+                android:icon="@drawable/ic_vpn_key_black_24dp"
+                android:title="@string/menu_keyword" />
+
+            <item
+                android:id="@+id/nav_scrap"
+                android:icon="@drawable/ic_content_paste_black_24dp"
+                android:title="@string/menu_scrap" />
 
             <item
                 android:id="@+id/nav_timeline"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/title_timeline" />
+                android:icon="@drawable/ic_timeline_black_24dp"
+                android:title="@string/menu_timeline" />
 
             <item
                 android:id="@+id/nav_logout"
@@ -21,6 +39,10 @@
                 android:id="@+id/nav_unlink"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/unlink" />
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="@string/setting" />
         </menu>
     </item>
 

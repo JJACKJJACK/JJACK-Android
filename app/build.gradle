@@ -57,4 +57,7 @@ dependencies {
 
     // Timeline-View
     compile 'com.github.vipulasri:timelineview:1.0.5'
+
+    // 버튼 클릭 애니메이션(material-ripple)
+    compile 'com.balysv:material-ripple:1.0.2'
 }

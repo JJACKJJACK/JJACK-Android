@@ -9,8 +9,10 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="nav_elevation">16dp</dimen>
-
     <dimen name="fab_margin">16dp</dimen>
+
+    <!-- card view -->
+    <dimen name="card_rounded_corners">2dp</dimen>
 
     <!-- button -->
     <dimen name="btn_margin">16dp</dimen>
@@ -21,10 +23,12 @@
 
     <!-- spinner -->
     <dimen name="spinner_width">144dp</dimen>
+    <dimen name="spinner_big_width">196dp</dimen>
     <dimen name="spinner_small_width">96dp</dimen>
     <dimen name="spinner_height">36dp</dimen>
+    <dimen name="spinner_big_height">56dp</dimen>
     <dimen name="spinner_vertical_margin">16dp</dimen>
-    <dimen name="spinner_margin_left">24dp</dimen>
+    <dimen name="spinner_left_margin">24dp</dimen>
     <dimen name="spinner_margin">16dp</dimen>
 
     <!-- text size -->
@@ -41,7 +45,11 @@
     <dimen name="list_top_margin">8dp</dimen>
     <dimen name="list_keyline">72dp</dimen>
     <dimen name="list_subtitle_height">72dp</dimen>
+    <dimen name="list_item_height">88dp</dimen>
     <dimen name="list_oneline_item_height">48dp</dimen>
+    <dimen name="list_image_size">72dp</dimen>
+    <dimen name="list_news_height">160dp</dimen>
+    <dimen name="list_news_margin">4dp</dimen>
 
     <!-- dialog -->
     <dimen name="dialog_margin">16dp</dimen>
@@ -50,10 +58,14 @@
     <dimen name="dialog_btn_margin">8dp</dimen>
     <dimen name="dialog_btn_height">52dp</dimen>
 
+    <!-- 키워드 랭킹 관련 -->
+    <dimen name="tv_best_margin">7dp</dimen>
+
     <!-- timeline -->
     <dimen name="timeline_margin">18dp</dimen>
     <dimen name="timeline_gap_margin">8dp</dimen>
     <dimen name="timeline_content_margin">12dp</dimen>
     <dimen name="timeline_line_size">2dp</dimen>
+    <dimen name="timeline_key_margin">80dp</dimen>
 
 </resources>

@@ -38,14 +38,24 @@
             android:layout_marginRight="@dimen/timeline_margin"
             android:layout_gravity="center_vertical"
             app:cardElevation="@dimen/btn_elevation"
-            app:contentPadding="@dimen/timeline_content_margin" >
+            app:contentPadding="@dimen/timeline_content_margin"
+            app:cardCornerRadius="@dimen/card_rounded_corners" >
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="@dimen/list_image_size"
+                android:layout_height="@dimen/list_image_size"
+                android:id="@+id/image_view_timeline_content"
+                android:textSize="@dimen/text_size_caption2"
+                android:textColor="@color/text_caption"
+                app:srcCompat="@drawable/no_image" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:paddingLeft="@dimen/timeline_key_margin"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:ignore="RtlSymmetry">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:layout_width="match_parent"
@@ -53,7 +63,8 @@
                     android:id="@+id/tv_timeline_content_date"
                     android:textSize="@dimen/text_size_caption2"
                     android:textColor="@color/text_caption"
-                    tools:text="@{item.date}" />
+                    android:text="@{item.date}"
+                    tools:text="@string/example_date" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:layout_width="match_parent"
@@ -62,7 +73,8 @@
                     android:id="@+id/tv_timeline_content_title"
                     android:textColor="@color/text_normal"
                     android:textSize="@dimen/text_size_body"
-                    tools:text="@{item.content}"/>
+                    android:text="@{item.content}"
+                    tools:text="@string/example_text" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>

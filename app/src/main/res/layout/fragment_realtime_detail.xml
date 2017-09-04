@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/realtime_detail_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_subtitle_height"
+        android:text="@string/realtime_subtitle"
+        android:textSize="@dimen/text_size_title"
+        android:textColor="@color/text_normal"
+        tools:text="[선택한 검색어] 검색 결과"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/list_margin"
+        android:paddingTop="@dimen/list_top_margin"
+        tools:ignore="RtlSymmetry" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recycler_view_blank_realtime_detail" />
+
+</LinearLayout>

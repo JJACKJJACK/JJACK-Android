@@ -8,11 +8,13 @@ package com.mkm.hanium.jjack.timeline;
 public class TimelineContentItem extends TimelineItem {
     private String date;
     private String content;
+    private String imageUrl;
 
-    TimelineContentItem(int viewType, String date, String content) {
+    TimelineContentItem(int viewType, String date, String content, String imageUrl) {
         super(viewType);
         this.date = date;
         this.content = content;
+        this.imageUrl = imageUrl;
     }
 
     public String getContent() {
@@ -27,5 +29,12 @@ public class TimelineContentItem extends TimelineItem {
     }
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

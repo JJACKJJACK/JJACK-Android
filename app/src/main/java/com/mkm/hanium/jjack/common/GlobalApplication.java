@@ -23,6 +23,8 @@ import com.mkm.hanium.jjack.login.ProfileItem;
 import com.mkm.hanium.jjack.util.ApiClient;
 import com.mkm.hanium.jjack.util.ApiInterface;
 
+import java.util.ArrayList;
+
 /**
  * 이미지를 캐시를 앱 수준에서 관리하기 위한 애플리케이션 객체이다.
  * 로그인 기반 샘플앱에서 사용한다.
@@ -31,15 +33,18 @@ import com.mkm.hanium.jjack.util.ApiInterface;
  */
 public class GlobalApplication extends Application {
     private static volatile GlobalApplication instance = null;
-    private ApiInterface apiInterface;
     private final ProfileItem user = new ProfileItem();
+    private ApiInterface apiInterface;
+    private int index;
+    private final ArrayList<String> entries = new ArrayList<>();
+    private String nowKeyword;
 
     /**
      * singleton 애플리케이션 객체를 얻는다.
      * @return singleton 애플리케이션 객체
      */
     public static GlobalApplication getGlobalApplicationContext() {
-        if(instance == null)
+        if (instance == null)
             throw new IllegalStateException("this application does not inherit com.kakao.GlobalApplication");
         return instance;
     }
@@ -57,7 +62,41 @@ public class GlobalApplication extends Application {
         return instance.user;
     }
 
-    public static ApiInterface getApiInterface() { return instance.apiInterface; }
+    public static ApiInterface getApiInterface() {
+        return instance.apiInterface;
+    }
+
+    public static int getIndex() {
+        return instance.index;
+    }
+
+    public static void setIndex(int index) {
+        instance.index = index;
+    }
+
+    public static ArrayList<String> getEntries() {
+        return instance.entries;
+    }
+
+    public static void addEntries(String entry) {
+        instance.entries.add(entry);
+    }
+
+    public static void clearEntries() {
+        instance.entries.clear();
+    }
+
+    public static void deleteKeyword(int position) {
+        instance.entries.remove(position);
+    }
+
+    public static String getNowKeyword() {
+        return instance.nowKeyword;
+    }
+
+    public static void setNowKeyword(String nowKeyword) {
+        instance.nowKeyword = nowKeyword;
+    }
 
     /**
      * 앱 종료시 싱글턴 객체 초기화

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_kakaolink"
+        android:icon="@drawable/kakaolink_btn_small"
+        app:showAsAction="ifRoom"
+        android:title="@string/action_kakaolink" />
+
+    <item
+        android:id="@+id/menu_scrap"
+        android:icon="@drawable/ic_archive_white_24dp"
+        app:showAsAction="ifRoom"
+        android:title="@string/action_scrap" />
+
+</menu>

@@ -14,23 +14,23 @@
         android:layout_marginTop="72dp"
         android:layout_marginBottom="36dp">
 
-        <Spinner
+        <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/spinner_year"
             android:layout_width="@dimen/spinner_width"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/spinner_vertical_margin"
             android:paddingBottom="@dimen/spinner_vertical_margin"
-            android:paddingLeft="@dimen/spinner_margin_left"
+            android:paddingLeft="@dimen/spinner_left_margin"
             android:layout_marginRight="@dimen/spinner_margin"
             tools:ignore="RtlSymmetry" />
 
-        <Spinner
+        <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/spinner_gender"
             android:layout_width="@dimen/spinner_width"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/spinner_vertical_margin"
             android:paddingBottom="@dimen/spinner_vertical_margin"
-            android:paddingLeft="@dimen/spinner_margin_left"
+            android:paddingLeft="@dimen/spinner_left_margin"
             android:layout_marginLeft="@dimen/spinner_margin"
             tools:ignore="RtlSymmetry" />
 

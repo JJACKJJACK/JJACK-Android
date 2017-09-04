@@ -1,4 +1,6 @@
-package com.mkm.hanium.jjack.util;
+package com.mkm.hanium.jjack.request_api;
+
+import com.mkm.hanium.jjack.util.DefaultApi;
 
 import java.util.ArrayList;
 

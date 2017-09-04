@@ -22,7 +22,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.mkm.hanium.jjack.R;
 import com.mkm.hanium.jjack.common.GlobalApplication;
 import com.mkm.hanium.jjack.databinding.PopupwindowKeywordRankingChartBinding;
-import com.mkm.hanium.jjack.util.KeywordRankingSearchLogRequestApi;
+import com.mkm.hanium.jjack.request_api.KeywordRankingSearchLogRequestApi;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -45,8 +45,6 @@ public class PopupChartDialogFragment extends DialogFragment {
 
     private ArrayList<String> labels; // x축에 표시될 이름
     private ArrayList<Entry> entries; // y축(데이터)
-    private LineDataSet lineDataSet;
-    private LineData lineData;
     private String keyword;
 
     @Nullable
@@ -100,7 +98,7 @@ public class PopupChartDialogFragment extends DialogFragment {
     }
 
     private void setGraph() {
-        lineDataSet = new LineDataSet(entries, "검색량");
+        LineDataSet lineDataSet = new LineDataSet(entries, "검색량");
 
         lineDataSet.setDrawFilled(true); // 선아래로 색상표시
 //        lineDataSet.setDrawValues(false); //
@@ -132,7 +130,7 @@ public class PopupChartDialogFragment extends DialogFragment {
         Legend legend = binding.chartKeywordRanking.getLegend();
         legend.setEnabled(false);
 
-        lineData = new LineData(labels, lineDataSet);
+        LineData lineData = new LineData(labels, lineDataSet);
         binding.chartKeywordRanking.setData(lineData);
         lineData.setValueTextSize(14f);
         lineData.setValueFormatter(new ValueFormatter() {

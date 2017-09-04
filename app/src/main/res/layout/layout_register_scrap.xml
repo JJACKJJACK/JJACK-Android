@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorBright"
+        android:padding="10dp"
+        android:text="scrap 등록하기"
+        android:textSize="25sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBright"
+            android:orientation="horizontal" >
+
+            <Spinner
+                android:id="@+id/spinner_scrap"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:popupBackground="@color/colorBright" />
+        </LinearLayout>
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/btn_folder_setting"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:background="@color/color6"
+            app:srcCompat="@drawable/ic_add_box_black_24dp" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/et_scrap_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="제목을 쓰세요" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/et_scrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:hint="메모를 쓰세요"
+            android:lines="8"
+            android:maxLines="10" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_scrap_send"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:text="등록하기" />
+
+    </LinearLayout>
+</LinearLayout>
